@@ -1,0 +1,5 @@
+v1
+DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,Patmos:comp|PatmosCore:cores_0|Execute:execute|lpm_mult:Mult2|mult_86t:auto_generated|mac_out2,
+DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,Patmos:comp|PatmosCore:cores_0|Execute:execute|lpm_mult:Mult3|mult_86t:auto_generated|mac_out2,
+DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,Patmos:comp|PatmosCore:cores_0|Execute:execute|lpm_mult:Mult1|mult_86t:auto_generated|mac_out2,
+DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,Patmos:comp|PatmosCore:cores_0|Execute:execute|lpm_mult:Mult0|mult_7dt:auto_generated|mac_out2,

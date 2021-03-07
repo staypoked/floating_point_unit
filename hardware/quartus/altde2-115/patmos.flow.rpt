@@ -1,0 +1,130 @@
+Flow report for patmos
+Thu Jan 28 18:15:40 2021
+Quartus Prime Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Flow Summary
+  3. Flow Settings
+  4. Flow Non-Default Global Settings
+  5. Flow Elapsed Time
+  6. Flow OS Summary
+  7. Flow Log
+  8. Flow Messages
+  9. Flow Suppressed Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2019  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++----------------------------------------------------------------------------------+
+; Flow Summary                                                                     ;
++------------------------------------+---------------------------------------------+
+; Flow Status                        ; Successful - Thu Jan 28 18:15:33 2021       ;
+; Quartus Prime Version              ; 19.1.0 Build 670 09/22/2019 SJ Lite Edition ;
+; Revision Name                      ; patmos                                      ;
+; Top-level Entity Name              ; patmos_top                                  ;
+; Family                             ; Cyclone IV E                                ;
+; Device                             ; EP4CE115F29C7                               ;
+; Timing Models                      ; Final                                       ;
+; Total logic elements               ; 17,314 / 114,480 ( 15 % )                   ;
+;     Total combinational functions  ; 16,600 / 114,480 ( 15 % )                   ;
+;     Dedicated logic registers      ; 5,066 / 114,480 ( 4 % )                     ;
+; Total registers                    ; 5142                                        ;
+; Total pins                         ; 57 / 529 ( 11 % )                           ;
+; Total virtual pins                 ; 0                                           ;
+; Total memory bits                  ; 146,624 / 3,981,312 ( 4 % )                 ;
+; Embedded Multiplier 9-bit elements ; 8 / 532 ( 2 % )                             ;
+; Total PLLs                         ; 1 / 4 ( 25 % )                              ;
++------------------------------------+---------------------------------------------+
+
+
++-----------------------------------------+
+; Flow Settings                           ;
++-------------------+---------------------+
+; Option            ; Setting             ;
++-------------------+---------------------+
+; Start date & time ; 01/28/2021 18:11:54 ;
+; Main task         ; Compilation         ;
+; Revision Name     ; patmos              ;
++-------------------+---------------------+
+
+
++-------------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                        ;
++-------------------------------------+----------------------------------------+---------------+-------------+------------+
+; Assignment Name                     ; Value                                  ; Default Value ; Entity Name ; Section Id ;
++-------------------------------------+----------------------------------------+---------------+-------------+------------+
+; COMPILER_SIGNATURE_ID               ; 52241223886.161185391402663            ; --            ; --          ; --         ;
+; CYCLONEII_OPTIMIZATION_TECHNIQUE    ; Speed                                  ; Balanced      ; --          ; --         ;
+; FITTER_EFFORT                       ; Standard Fit                           ; Auto Fit      ; --          ; --         ;
+; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --            ; --          ; --         ;
+; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --            ; --          ; --         ;
+; PARTITION_COLOR                     ; -- (Not supported for targeted family) ; --            ; patmos_top  ; Top        ;
+; PARTITION_FITTER_PRESERVATION_LEVEL ; -- (Not supported for targeted family) ; --            ; patmos_top  ; Top        ;
+; PARTITION_NETLIST_TYPE              ; -- (Not supported for targeted family) ; --            ; patmos_top  ; Top        ;
+; PHYSICAL_SYNTHESIS_COMBO_LOGIC      ; On                                     ; Off           ; --          ; --         ;
+; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                    ; --            ; --          ; --         ;
+; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW  ; --            ; --          ; --         ;
+; SEED                                ; 6                                      ; 1             ; --          ; --         ;
+; TOP_LEVEL_ENTITY                    ; patmos_top                             ; patmos        ; --          ; --         ;
+; VERILOG_MACRO                       ; SYNTHESIS=<None>                       ; --            ; --          ; --         ;
++-------------------------------------+----------------------------------------+---------------+-------------+------------+
+
+
++--------------------------------------------------------------------------------------------------------------------------+
+; Flow Elapsed Time                                                                                                        ;
++----------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
++----------------------+--------------+-------------------------+---------------------+------------------------------------+
+; Analysis & Synthesis ; 00:01:31     ; 1.0                     ; 1235 MB             ; 00:01:36                           ;
+; Fitter               ; 00:01:58     ; 1.1                     ; 1918 MB             ; 00:03:41                           ;
+; Assembler            ; 00:00:05     ; 1.0                     ; 863 MB              ; 00:00:05                           ;
+; Timing Analyzer      ; 00:00:06     ; 1.6                     ; 1136 MB             ; 00:00:09                           ;
+; Total                ; 00:03:40     ; --                      ; --                  ; 00:05:31                           ;
++----------------------+--------------+-------------------------+---------------------+------------------------------------+
+
+
++----------------------------------------------------------------------------------------+
+; Flow OS Summary                                                                        ;
++----------------------+------------------+----------------+------------+----------------+
+; Module Name          ; Machine Hostname ; OS Name        ; OS Version ; Processor type ;
++----------------------+------------------+----------------+------------+----------------+
+; Analysis & Synthesis ; ubuntu           ; Ubuntu 20.04.1 ; 20         ; x86_64         ;
+; Fitter               ; ubuntu           ; Ubuntu 20.04.1 ; 20         ; x86_64         ;
+; Assembler            ; ubuntu           ; Ubuntu 20.04.1 ; 20         ; x86_64         ;
+; Timing Analyzer      ; ubuntu           ; Ubuntu 20.04.1 ; 20         ; x86_64         ;
++----------------------+------------------+----------------+------------+----------------+
+
+
+------------
+; Flow Log ;
+------------
+quartus_map quartus/altde2-115/patmos
+quartus_fit quartus/altde2-115/patmos
+quartus_asm quartus/altde2-115/patmos
+quartus_sta quartus/altde2-115/patmos
+
+
+

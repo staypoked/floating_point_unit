@@ -1,0 +1,143 @@
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/io/test/BranchPredictTester.scala:1:1: [0m
+[0m[[0m[33mwarn[0m] [0m[0mFound names but no class, trait or object is defined in the compilation unit.[0m
+[0m[[0m[33mwarn[0m] [0m[0mThe incremental compiler cannot record the dependency information in such case.[0m
+[0m[[0m[33mwarn[0m] [0m[0mSome errors like unused import referring to a non-existent class might not be reported.[0m
+[0m[[0m[33mwarn[0m] [0m[0m    [0m
+[0m[[0m[33mwarn[0m] [0m[0m/*[0m
+[0m[[0m[33mwarn[0m] [0m[0m^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:57:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  dm.io.master.M := io.master.M[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:58:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  dm.io.master.M.Cmd := Mux(selDC ||[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:62:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  dm.io.invalidate := io.invalDCache[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:63:16: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  val dmS = dm.io.master.S[0m
+[0m[[0m[33mwarn[0m] [0m[0m               ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:67:17: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.scIO <> sc.io[0m
+[0m[[0m[33mwarn[0m] [0m[0m                ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:70:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  sc.io.fromCPU.M := io.master.M[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:71:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  sc.io.fromCPU.M.Cmd := Mux(selSC, io.master.M.Cmd, OcpCmd.IDLE)[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:72:16: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  val scS = sc.io.fromCPU.S[0m
+[0m[[0m[33mwarn[0m] [0m[0m               ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:82:44: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  val burstReadJoin1 = new OcpBurstJoin(dm.io.slave, bp.io.slave, burstReadBus1.io.slave)[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                           ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:85:44: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  val burstReadJoin2 = new OcpBurstJoin(sc.io.toMemory, burstReadBus1.io.master, burstReadBus2.io.slave)[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                           ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:89:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  wc.io.readMaster.M <> burstReadBus2.io.master.M[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:90:35: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  burstReadBus2.io.master.S <> wc.io.readMaster.S[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                  ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:91:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  wc.io.writeMaster.M := io.master.M[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:92:6: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  wc.io.writeMaster.M.Cmd := Mux(!selSC && (Bool(DCACHE_WRITETHROUGH) || !selDC),[0m
+[0m[[0m[33mwarn[0m] [0m[0m     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:94:21: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  val wcWriteS = wc.io.writeMaster.S[0m
+[0m[[0m[33mwarn[0m] [0m[0m                    ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:95:18: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.slave <> wc.io.slave[0m
+[0m[[0m[33mwarn[0m] [0m[0m                 ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:106:19: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.dcPerf <> dm.io.perf[0m
+[0m[[0m[33mwarn[0m] [0m[0m                  ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:107:19: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.scPerf <> sc.io.perf[0m
+[0m[[0m[33mwarn[0m] [0m[0m                  ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/datacache/DataCache.scala:108:19: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.wcPerf <> wc.io.perf[0m
+[0m[[0m[33mwarn[0m] [0m[0m                  ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:66:10: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  icache.io.feicache <> fetch.io.feicache[0m
+[0m[[0m[33mwarn[0m] [0m[0m         ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:67:31: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  fetch.io.icachefe <> icache.io.icachefe[0m
+[0m[[0m[33mwarn[0m] [0m[0m                              ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:68:10: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  icache.io.exicache <> execute.io.exicache[0m
+[0m[[0m[33mwarn[0m] [0m[0m         ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:69:36: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  memory.io.icacheIllMem <> icache.io.illMem[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                   ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:111:29: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m    new OcpBurstJoin(icache.io.ocp_port, dcache.io.slave,[0m
+[0m[[0m[33mwarn[0m] [0m[0m                            ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:115:37: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m    new OcpBurstPriorityJoin(icache.io.ocp_port, dcache.io.slave,[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                    ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:120:7: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  mmu.io.exec <> selICache[0m
+[0m[[0m[33mwarn[0m] [0m[0m      ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:121:22: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.mmuInOut <> mmu.io.ctrl[0m
+[0m[[0m[33mwarn[0m] [0m[0m                     ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:122:7: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  mmu.io.virt.M <> burstBus.io.master.M[0m
+[0m[[0m[33mwarn[0m] [0m[0m      ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:123:31: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  burstBus.io.master.S <> mmu.io.virt.S[0m
+[0m[[0m[33mwarn[0m] [0m[0m                              ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:126:30: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  memory.io.ena_in := icache.io.ena_out && !dcache.io.scIO.stall[0m
+[0m[[0m[33mwarn[0m] [0m[0m                             ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:127:10: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  icache.io.ena_in := memory.io.ena_out && !dcache.io.scIO.stall[0m
+[0m[[0m[33mwarn[0m] [0m[0m         ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:128:56: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  dcache.io.scIO.ena_in := memory.io.ena_out && icache.io.ena_out[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                                       ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:131:43: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  val enable = memory.io.ena_out & icache.io.ena_out & !dcache.io.scIO.stall[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                          ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:148:10: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  icache.io.invalidate := exc.io.invalICache[0m
+[0m[[0m[33mwarn[0m] [0m[0m         ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:152:7: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  mmu.io.superMode := exc.io.superMode[0m
+[0m[[0m[33mwarn[0m] [0m[0m      ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:156:24: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.perf.ic := icache.io.perf[0m
+[0m[[0m[33mwarn[0m] [0m[0m                       ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:166:21: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  io.memPort <> mmu.io.phys[0m
+[0m[[0m[33mwarn[0m] [0m[0m                    ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:264:50: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m    registerPins(dev.getClass.getSimpleName, dev.io)[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                                 ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:269:20: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m      val io = dev.io[0m
+[0m[[0m[33mwarn[0m] [0m[0m                   ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:447:18: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m      memarbiter.io.master(i).M <> cores(i).io.memPort.M[0m
+[0m[[0m[33mwarn[0m] [0m[0m                 ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:448:43: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m      cores(i).io.memPort.S <> memarbiter.io.master(i).S[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                          ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:450:36: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m    ramCtrl.io.ocp.M <> memarbiter.io.slave.M[0m
+[0m[[0m[33mwarn[0m] [0m[0m                                   ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/patmos/Patmos.scala:451:16: method io is deprecated (since Chisel 3.4): Removed for causing issues in Scala 2.12+. You remain free to define io Bundles in your Modules, but you cannot rely on an io field in every Module. For more information, see: https://github.com/freechipsproject/chisel3/pull/1550.[0m
+[0m[[0m[33mwarn[0m] [0m[0m    memarbiter.io.slave.S <> ramCtrl.io.ocp.S[0m
+[0m[[0m[33mwarn[0m] [0m[0m               ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/ptp1588assist/PTP1588Assist.scala:93:18: method execute in object Driver is deprecated (since 3.2.2): Use chisel3.stage.ChiselStage.execute. This will be removed in 3.4.[0m
+[0m[[0m[33mwarn[0m] [0m[0m  chisel3.Driver.execute(Array("--target-dir", "generated/PTP1588Assist"), () => new PTP1588Assist(addrWidth = 16, dataWidth = 32, clockFreq = 80000000))[0m
+[0m[[0m[33mwarn[0m] [0m[0m                 ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m/home/patmos/Documents/aca/floating_point_unit/hardware/src/main/scala/ptp1588assist/PTP1588Assist.scala:93:11: object Driver in package chisel3 is deprecated (since 3.2.4): Please switch to chisel3.stage.ChiselStage[0m
+[0m[[0m[33mwarn[0m] [0m[0m  chisel3.Driver.execute(Array("--target-dir", "generated/PTP1588Assist"), () => new PTP1588Assist(addrWidth = 16, dataWidth = 32, clockFreq = 80000000))[0m
+[0m[[0m[33mwarn[0m] [0m[0m          ^[0m
+[0m[[0m[33mwarn[0m] [0m[0m46 warnings found[0m
