@@ -1,0 +1,6 @@
+# Global Ignore Settings
+# IntelliJ Settings
+.idea
+
+# sbt bsp settings
+.sbt
