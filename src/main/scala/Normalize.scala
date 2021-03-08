@@ -1,29 +1,23 @@
-import Chisel.fromIntToWidth
+import Chisel.{fromIntToWidth, fromtIntToLiteral}
 import chisel3.{Bundle, Input, Module, Output, RegNext, UInt, when}
 
 class Normalize extends Module{
   val io = IO(new Bundle {
-    val a = Input(UInt(32.W))
-    val b = Input(UInt(32.W))
-    val c = Output(UInt(32.W))
+    val in = Input(UInt(32.W))
+    val out = Output(UInt(32.W))
   })
 
-
-
-
   // Normalization
-  val norm_mant = RegNext(tmp_mant);
-  val norm_exp = RegNext(tmp_exp);
+  val norm_exp = RegNext(io.in(7,1));
+  val norm_mant = RegNext(io.in(31,8));
+
 
   when (!norm_mant(0)){
     norm_mant := RegNext(norm_mant << 1.U);
     norm_exp := RegNext(norm_exp - 1.U);
   }.otherwise{
-    tmp_mant := RegNext(tmp_mant);
-    tmp_exp := RegNext(tmp_exp);
+    io.out(31,8) := RegNext(norm_mant);
+    io.out(7,1) := RegNext(norm_exp);
   }
-
-
-  // Round/Truncate
 
 }

@@ -2,6 +2,8 @@ import Chisel.is
 import chisel3._
 import chisel3.core.IO
 import chisel3._
+import chisel3.internal.InternalDontCare.:=
+import chisel3.util.ImplicitConversions.booleanToBool
 import chisel3.util._
 
 
@@ -14,20 +16,20 @@ class Adder extends Module{
 
   //val a_sign := Cat(io.a(3,2), 0.U(2.W));
   val a_sign = RegNext(io.a(0)); // 1 for neg
-  val a_exp = RegNext(io.a(1,7));
-  val a_mant = RegNext(io.a(8,31));
+  val a_exp = RegNext(io.a(7,1));
+  val a_mant = RegNext(io.a(31,8));
 
   val b_sign = RegNext(io.b(0));
-  val b_exp = RegNext(io.b(1,7));
-  val b_mant = RegNext(io.b(8,31));
+  val b_exp = RegNext(io.b(7,1));
+  val b_mant = RegNext(io.b(31,8));
 
   // output
-  val tmp_sign = RegInit(0.U(1.W));
-  val tmp_exp = RegInit(0.U(7.W));
-  val tmp_mant = RegInit(0.U(24.W));
+  val tmp_sign = RegInit(UInt(1.W));
+  val tmp_exp = RegInit(UInt(7.W));
+  val tmp_mant = RegInit(UInt(24.W));
 
-  val check_underflow = 0.U;
-  val check_overflow = 0.U;
+  val check_underflow = false;
+  val check_overflow = false;
 
   /*
   * Simple Double precision?
@@ -50,6 +52,7 @@ class Adder extends Module{
 
   // afterwards the exponents has to equal
   tmp_exp := a_exp;
+  val opcode = 0.U;
 
   switch(a_sign){
     is(0.U){
@@ -57,6 +60,8 @@ class Adder extends Module{
         // sign + +
         tmp_sign := 0.U;
         tmp_mant := RegNext(a_mant + b_mant);
+        opcode := 1.U;
+
       }.otherwise{
         // sign a + and b -
         when (a_mant >= b_mant){
@@ -65,6 +70,7 @@ class Adder extends Module{
           tmp_sign := b_sign;
         }
         tmp_mant := a_mant - b_mant;
+        opcode:= 2.U;
       }
     }
     is(1.U) {
@@ -76,23 +82,44 @@ class Adder extends Module{
           tmp_sign := b_sign;
         }
         tmp_mant := b_mant - a_mant;
+        opcode := 2.U;
+
       }.otherwise{
         // sign - -
         tmp_sign := a_sign;
         tmp_mant := a_mant + b_mant;
+        opcode := 1.U;
       }
     }
   }
 
 
   // Over- and underflow
-  switch(tmp_exp){
-    is("1111111".){
+  switch(opcode){
+    is(1.U){
+      when (a_mant > b_mant){
+        when (tmp_mant < a_mant){
+          check_overflow := true;
+        }
+      }.otherwise{
+        when (tmp_mant < b_mant){
+          check_overflow := true;
+        }
+      }
+    }
 
+    is(2.U){
+      when (a_mant > b_mant){
+        when (tmp_mant > a_mant){
+          check_underflow := true;
+        }
+      }.otherwise{
+        when (tmp_mant > b_mant){
+          check_underflow := true;
+        }
+      }
     }
   }
-
-
 
 
   // output

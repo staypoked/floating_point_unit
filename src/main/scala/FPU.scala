@@ -9,6 +9,10 @@ class FPU extends Module{
   })
 
 
+  // instantiate Adder and Multiplier
+
+
+
 
 
 }
