@@ -4,3 +4,7 @@
 
 # sbt bsp settings
 .sbt
+
+# project and traget folder
+project/
+target/
