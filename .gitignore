@@ -1,9 +1,9 @@
 # Global Ignore Settings
 # IntelliJ Settings
-.idea
+.idea/
 
 # sbt bsp settings
-.sbt
+.sbt/
 
 # project and traget folder
 project/
