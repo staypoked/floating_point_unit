@@ -1,8 +1,5 @@
 import Chisel.is
 import chisel3._
-import chisel3.core.IO
-import chisel3._
-import chisel3.internal.InternalDontCare.:=
 import chisel3.util.ImplicitConversions.booleanToBool
 import chisel3.util._
 
@@ -54,7 +51,7 @@ class Adder extends Module{
   tmp_exp := a_exp;
   val opcode = 0.U;
 
-  switch(a_sign){
+  /*switch(a_sign){
     is(0.U){
       when (!b_sign){
         // sign + +
@@ -90,6 +87,42 @@ class Adder extends Module{
         tmp_mant := a_mant + b_mant;
         opcode := 1.U;
       }
+    }
+  }*/
+
+  when(!a_sign) {
+    when(!b_sign) {
+      // sign + +
+      tmp_sign := 0.U;
+      tmp_mant := RegNext(a_mant + b_mant);
+      opcode := 1.U;
+
+    }.otherwise {
+      // sign a + and b -
+      when(a_mant >= b_mant) {
+        tmp_sign := a_sign;
+      }.otherwise {
+        tmp_sign := b_sign;
+      }
+      tmp_mant := a_mant - b_mant;
+      opcode := 2.U;
+    }
+  }.otherwise{
+    when (!b_sign){
+      // sign a - and b +
+      when (a_mant > b_mant){
+        tmp_sign := a_sign;
+      }.otherwise{
+        tmp_sign := b_sign;
+      }
+      tmp_mant := b_mant - a_mant;
+      opcode := 2.U;
+
+    }.otherwise{
+      // sign - -
+      tmp_sign := a_sign;
+      tmp_mant := a_mant + b_mant;
+      opcode := 1.U;
     }
   }
 
