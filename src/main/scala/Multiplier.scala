@@ -1,5 +1,5 @@
 import Chisel.{fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral, is}
-import chisel3.util.switch
+import chisel3.util.{Cat, switch}
 import chisel3.{Bundle, Input, Module, Output, RegInit, RegNext, UInt, when}
 
 class Multiplier extends Module{
@@ -19,9 +19,9 @@ class Multiplier extends Module{
   val b_mant = RegNext(io.b(31,8));
 
   // output
-  val tmp_sign = RegInit(UInt(1.W));
-  val tmp_exp = RegInit(UInt(7.W));
-  val tmp_mant = RegInit(UInt(24.W));
+  var tmp_sign = RegInit(0.U(1.W));
+  var tmp_exp = RegInit(0.U(7.W));
+  var tmp_mant = RegInit(0.U(24.W));
 
   tmp_sign := a_sign ^ b_sign
 
@@ -44,26 +44,26 @@ class Multiplier extends Module{
 
   switch(io.sel) {
     is(0.U) { // multiplication
-      tmp_mant := a_mant << b_mant
+      tmp_mant := a_mant * b_mant
     }
     is(1.U) { // division
-      tmp_mant := a_mant >> b_mant
+      tmp_mant := a_mant / b_mant
     }
   }
 
-  var check_overflow = false;
-  var check_underflow = false;
+  var check_overflow = RegInit(false.B);
+  var check_underflow = RegInit(false.B);
 
   // Over- and underflow
   switch(io.sel){ // multiplication
     is(0.U){
       when (a_mant > b_mant){
         when (tmp_mant < a_mant){
-          check_overflow = true;
+          check_overflow := true.B;
         }
       }.otherwise{
         when (tmp_mant < b_mant){
-          check_overflow = true;
+          check_overflow := true.B;
         }
       }
     }
@@ -71,25 +71,23 @@ class Multiplier extends Module{
     is(1.U){ // division
       when (a_mant > b_mant){
         when (tmp_mant > a_mant){
-          check_underflow = true;
+          check_underflow := true.B;
         }
       }.otherwise{
         when (tmp_mant > b_mant){
-          check_underflow = true;
+          check_underflow := true.B;
         }
       }
     }
   }
 
   val trigger_except = check_overflow | check_underflow
-  when (trigger_except.B) {
+  when (trigger_except) {
     // trigger exception using some output flag
   }
 
   // output
-  io.c(0) := tmp_sign;
-  io.c(1,7) := tmp_exp;
-  io.c(8,31) := tmp_mant;
+  io.c := Cat(Cat(tmp_sign, tmp_exp), tmp_mant);
 
 
 }
