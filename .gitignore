@@ -4,7 +4,16 @@
 
 # sbt bsp settings
 .sbt/*
+.bsp/*
 
 # project and traget folder
 project/*
 target/*
+
+# test folder
+test_run_dir/*
+
+# chisel generated files
+*.anno.*
+*.fir
+*.v
