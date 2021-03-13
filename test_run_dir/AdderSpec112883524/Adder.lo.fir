@@ -1,0 +1,147 @@
+circuit Adder :
+  module Adder :
+    input clock : Clock
+    input reset : UInt<1>
+    input io_a : UInt<32>
+    input io_b : UInt<32>
+    output io_c : UInt<32>
+
+    node _T = bits(reset, 0, 0) @[Adder.scala 12:23]
+    node _T_1 = eq(_T, UInt<1>("h0")) @[Adder.scala 12:23]
+    node _T_2 = bits(io_a, 31, 31) @[Adder.scala 14:28]
+    reg a_sign : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), a_sign) @[Adder.scala 14:23]
+    node _T_3 = bits(io_a, 30, 23) @[Adder.scala 15:27]
+    reg a_exp : UInt<8>, clock with :
+      reset => (UInt<1>("h0"), a_exp) @[Adder.scala 15:22]
+    node _T_4 = bits(io_a, 22, 0) @[Adder.scala 16:28]
+    reg a_mant : UInt<23>, clock with :
+      reset => (UInt<1>("h0"), a_mant) @[Adder.scala 16:23]
+    node _T_5 = bits(io_b, 31, 31) @[Adder.scala 19:28]
+    reg b_sign : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), b_sign) @[Adder.scala 19:23]
+    node _T_6 = bits(io_b, 30, 23) @[Adder.scala 20:27]
+    reg b_exp : UInt<8>, clock with :
+      reset => (UInt<1>("h0"), b_exp) @[Adder.scala 20:22]
+    node _T_7 = bits(io_b, 22, 0) @[Adder.scala 21:28]
+    reg b_mant : UInt<23>, clock with :
+      reset => (UInt<1>("h0"), b_mant) @[Adder.scala 21:23]
+    node _T_8 = bits(reset, 0, 0) @[Adder.scala 24:23]
+    node _T_9 = eq(_T_8, UInt<1>("h0")) @[Adder.scala 24:23]
+    node _T_10 = bits(reset, 0, 0) @[Adder.scala 25:23]
+    node _T_11 = eq(_T_10, UInt<1>("h0")) @[Adder.scala 25:23]
+    reg tmp_sign : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), tmp_sign) @[Adder.scala 29:25]
+    reg tmp_exp : UInt<8>, clock with :
+      reset => (UInt<1>("h0"), tmp_exp) @[Adder.scala 30:24]
+    reg tmp_mant : UInt<23>, clock with :
+      reset => (UInt<1>("h0"), tmp_mant) @[Adder.scala 31:25]
+    reg check_underflow : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), check_underflow) @[Adder.scala 33:32]
+    reg check_overflow : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), check_overflow) @[Adder.scala 34:31]
+    node _T_12 = gt(a_exp, b_exp) @[Adder.scala 45:14]
+    node _T_13 = dshl(b_exp, UInt<1>("h1")) @[Adder.scala 48:29]
+    reg REG : UInt<8>, clock with :
+      reset => (UInt<1>("h0"), REG) @[Adder.scala 49:25]
+    node _T_14 = dshr(b_mant, UInt<1>("h1")) @[Adder.scala 50:23]
+    node _T_15 = lt(a_exp, b_exp) @[Adder.scala 51:20]
+    node _T_16 = dshl(a_exp, UInt<1>("h1")) @[Adder.scala 52:29]
+    reg REG_1 : UInt<8>, clock with :
+      reset => (UInt<1>("h0"), REG_1) @[Adder.scala 53:25]
+    node _T_17 = dshr(a_mant, UInt<1>("h1")) @[Adder.scala 54:23]
+    node _GEN_0 = mux(_T_15, REG_1, _T_3) @[Adder.scala 51:29 Adder.scala 53:15 Adder.scala 15:22]
+    node _GEN_1 = mux(_T_15, _T_17, _T_4) @[Adder.scala 51:29 Adder.scala 54:12 Adder.scala 16:23]
+    node _GEN_2 = mux(_T_12, REG, _T_6) @[Adder.scala 45:22 Adder.scala 49:15 Adder.scala 20:22]
+    node _GEN_3 = mux(_T_12, _T_14, _T_7) @[Adder.scala 45:22 Adder.scala 50:12 Adder.scala 21:23]
+    node _GEN_4 = mux(_T_12, _T_3, _GEN_0) @[Adder.scala 45:22 Adder.scala 15:22]
+    node _GEN_5 = mux(_T_12, _T_4, _GEN_1) @[Adder.scala 45:22 Adder.scala 16:23]
+    node _T_18 = bits(reset, 0, 0) @[Adder.scala 57:23]
+    node _T_19 = eq(_T_18, UInt<1>("h0")) @[Adder.scala 57:23]
+    node _T_20 = bits(reset, 0, 0) @[Adder.scala 58:23]
+    node _T_21 = eq(_T_20, UInt<1>("h0")) @[Adder.scala 58:23]
+    node _T_22 = bits(reset, 0, 0) @[Adder.scala 59:23]
+    node _T_23 = eq(_T_22, UInt<1>("h0")) @[Adder.scala 59:23]
+    node _T_24 = eq(a_exp, b_exp) @[Adder.scala 63:15]
+    reg REG_2 : UInt<2>, clock with :
+      reset => (UInt<1>("h0"), REG_2) @[Adder.scala 65:25]
+    node _T_25 = eq(a_sign, UInt<1>("h0")) @[Adder.scala 67:10]
+    node _T_26 = eq(b_sign, UInt<1>("h0")) @[Adder.scala 68:12]
+    node _T_27 = add(a_mant, b_mant) @[Adder.scala 71:28]
+    node _T_28 = tail(_T_27, 1) @[Adder.scala 71:28]
+    node _T_29 = bits(reset, 0, 0) @[Adder.scala 72:29]
+    node _T_30 = eq(_T_29, UInt<1>("h0")) @[Adder.scala 72:29]
+    node _T_31 = geq(a_mant, b_mant) @[Adder.scala 77:21]
+    node _GEN_6 = mux(_T_31, a_sign, b_sign) @[Adder.scala 77:32 Adder.scala 78:20 Adder.scala 80:20]
+    node _T_32 = sub(a_mant, b_mant) @[Adder.scala 82:28]
+    node _T_33 = tail(_T_32, 1) @[Adder.scala 82:28]
+    node _GEN_7 = mux(_T_26, UInt<1>("h0"), _GEN_6) @[Adder.scala 68:21 Adder.scala 70:18]
+    node _GEN_8 = mux(_T_26, _T_28, _T_33) @[Adder.scala 68:21 Adder.scala 71:18 Adder.scala 82:18]
+    node _GEN_9 = mux(_T_26, UInt<1>("h1"), UInt<2>("h2")) @[Adder.scala 68:21 Adder.scala 73:16 Adder.scala 83:16]
+    node _T_34 = eq(b_sign, UInt<1>("h0")) @[Adder.scala 86:12]
+    node _T_35 = gt(a_mant, b_mant) @[Adder.scala 88:21]
+    node _GEN_10 = mux(_T_35, a_sign, b_sign) @[Adder.scala 88:31 Adder.scala 89:20 Adder.scala 91:20]
+    node _T_36 = sub(b_mant, a_mant) @[Adder.scala 93:28]
+    node _T_37 = tail(_T_36, 1) @[Adder.scala 93:28]
+    node _T_38 = add(a_mant, b_mant) @[Adder.scala 99:28]
+    node _T_39 = tail(_T_38, 1) @[Adder.scala 99:28]
+    node _GEN_11 = mux(_T_34, _GEN_10, a_sign) @[Adder.scala 86:21 Adder.scala 98:18]
+    node _GEN_12 = mux(_T_34, _T_37, _T_39) @[Adder.scala 86:21 Adder.scala 93:18 Adder.scala 99:18]
+    node _GEN_13 = mux(_T_34, UInt<2>("h2"), UInt<1>("h1")) @[Adder.scala 86:21 Adder.scala 94:16 Adder.scala 100:16]
+    node _GEN_14 = mux(_T_25, _GEN_7, _GEN_11) @[Adder.scala 67:19]
+    node _GEN_15 = mux(_T_25, _GEN_8, _GEN_12) @[Adder.scala 67:19]
+    node _GEN_16 = mux(_T_25, _GEN_9, _GEN_13) @[Adder.scala 67:19]
+    node _T_40 = bits(reset, 0, 0) @[Adder.scala 104:25]
+    node _T_41 = eq(_T_40, UInt<1>("h0")) @[Adder.scala 104:25]
+    node _T_42 = eq(UInt<1>("h1"), REG_2) @[Conditional.scala 37:30]
+    node _T_43 = gt(a_mant, b_mant) @[Adder.scala 109:21]
+    node _T_44 = lt(tmp_mant, a_mant) @[Adder.scala 110:25]
+    node _GEN_17 = mux(_T_44, UInt<1>("h1"), UInt<1>("h0")) @[Adder.scala 110:35 Adder.scala 111:28 Adder.scala 34:31]
+    node _T_45 = lt(tmp_mant, b_mant) @[Adder.scala 114:25]
+    node _GEN_18 = mux(_T_45, UInt<1>("h1"), UInt<1>("h0")) @[Adder.scala 114:35 Adder.scala 115:28 Adder.scala 34:31]
+    node _GEN_19 = mux(_T_43, _GEN_17, _GEN_18) @[Adder.scala 109:31]
+    node _T_46 = eq(UInt<2>("h2"), REG_2) @[Conditional.scala 37:30]
+    node _T_47 = gt(a_mant, b_mant) @[Adder.scala 121:21]
+    node _T_48 = gt(tmp_mant, a_mant) @[Adder.scala 122:25]
+    node _GEN_20 = mux(_T_48, UInt<1>("h1"), UInt<1>("h0")) @[Adder.scala 122:35 Adder.scala 123:29 Adder.scala 33:32]
+    node _T_49 = gt(tmp_mant, b_mant) @[Adder.scala 126:25]
+    node _GEN_21 = mux(_T_49, UInt<1>("h1"), UInt<1>("h0")) @[Adder.scala 126:35 Adder.scala 127:29 Adder.scala 33:32]
+    node _GEN_22 = mux(_T_47, _GEN_20, _GEN_21) @[Adder.scala 121:31]
+    node _GEN_23 = mux(_T_46, _GEN_22, UInt<1>("h0")) @[Conditional.scala 39:67 Adder.scala 33:32]
+    node _GEN_24 = mux(_T_42, _GEN_19, UInt<1>("h0")) @[Conditional.scala 40:58 Adder.scala 34:31]
+    node _GEN_25 = mux(_T_42, UInt<1>("h0"), _GEN_23) @[Conditional.scala 40:58 Adder.scala 33:32]
+    node _GEN_26 = mux(_T_24, a_exp, UInt<8>("h0")) @[Adder.scala 63:26 Adder.scala 64:13 Adder.scala 30:24]
+    node _GEN_27 = mux(_T_24, _GEN_14, UInt<1>("h0")) @[Adder.scala 63:26 Adder.scala 29:25]
+    node _GEN_28 = mux(_T_24, _GEN_15, UInt<23>("h0")) @[Adder.scala 63:26 Adder.scala 31:25]
+    node _GEN_29 = mux(_T_24, _GEN_24, UInt<1>("h0")) @[Adder.scala 63:26 Adder.scala 34:31]
+    node _GEN_30 = mux(_T_24, _GEN_25, UInt<1>("h0")) @[Adder.scala 63:26 Adder.scala 33:32]
+    node hi = cat(tmp_sign, tmp_exp) @[Cat.scala 30:58]
+    node _T_50 = cat(hi, tmp_mant) @[Cat.scala 30:58]
+    node _T_51 = bits(reset, 0, 0) @[Adder.scala 135:23]
+    node _T_52 = eq(_T_51, UInt<1>("h0")) @[Adder.scala 135:23]
+    node hi_1 = cat(tmp_sign, tmp_exp) @[Cat.scala 30:58]
+    node _T_53 = cat(hi_1, tmp_mant) @[Cat.scala 30:58]
+    io_c <= _T_53 @[Adder.scala 136:8]
+    a_sign <= mux(reset, UInt<1>("h0"), _T_2) @[Adder.scala 14:23 Adder.scala 14:23 Adder.scala 14:23]
+    a_exp <= mux(reset, UInt<1>("h0"), _GEN_4) @[Adder.scala 15:22 Adder.scala 15:22]
+    a_mant <= mux(reset, UInt<1>("h0"), _GEN_5) @[Adder.scala 16:23 Adder.scala 16:23]
+    b_sign <= mux(reset, UInt<1>("h0"), _T_5) @[Adder.scala 19:23 Adder.scala 19:23 Adder.scala 19:23]
+    b_exp <= mux(reset, UInt<1>("h0"), _GEN_2) @[Adder.scala 20:22 Adder.scala 20:22]
+    b_mant <= mux(reset, UInt<1>("h0"), _GEN_3) @[Adder.scala 21:23 Adder.scala 21:23]
+    tmp_sign <= _GEN_27
+    tmp_exp <= _GEN_26
+    tmp_mant <= _GEN_28
+    check_underflow <= _GEN_30
+    check_overflow <= _GEN_29
+    REG <= mux(reset, UInt<1>("h0"), b_exp) @[Adder.scala 49:25 Adder.scala 49:25 Adder.scala 49:25]
+    REG_1 <= mux(reset, UInt<1>("h0"), a_exp) @[Adder.scala 53:25 Adder.scala 53:25 Adder.scala 53:25]
+    REG_2 <= _GEN_16
+    printf(clock, and(and(UInt<1>("h1"), _T_1), UInt<1>("h1")), "a_val: %b, b_val: %b\n", io_a, io_b) @[Adder.scala 12:23]
+    printf(clock, and(and(UInt<1>("h1"), _T_9), UInt<1>("h1")), "a_sign: %d, a_exp: %b, a_mant: %b\n", a_sign, a_exp, a_mant) @[Adder.scala 24:23]
+    printf(clock, and(and(UInt<1>("h1"), _T_11), UInt<1>("h1")), "b_sign: %d, b_exp: %b, b_mant: %b\n", b_sign, b_exp, b_mant) @[Adder.scala 25:23]
+    printf(clock, and(and(UInt<1>("h1"), _T_19), UInt<1>("h1")), "a_sign: %d, a_exp: %d, a_mant: %d\n", a_sign, a_exp, a_mant) @[Adder.scala 57:23]
+    printf(clock, and(and(UInt<1>("h1"), _T_21), UInt<1>("h1")), "b_sign: %d, b_exp: %d, b_mant: %d\n", b_sign, b_exp, b_mant) @[Adder.scala 58:23]
+    printf(clock, and(and(UInt<1>("h1"), _T_23), UInt<1>("h1")), "tmp_sign: %d, tmp_exp: %d, tmp_mant: %d\n", tmp_sign, tmp_exp, tmp_mant) @[Adder.scala 59:23]
+    printf(clock, and(and(and(and(and(UInt<1>("h1"), _T_24), _T_25), _T_26), _T_30), UInt<1>("h1")), "tmp_sign: %d, tmp_exp: %d, tmp_mant: %d\n", tmp_sign, tmp_exp, tmp_mant) @[Adder.scala 72:29]
+    printf(clock, and(and(and(UInt<1>("h1"), _T_24), _T_41), UInt<1>("h1")), "tmp_sign: %d, tmp_exp: %d, tmp_mant: %d\n", tmp_sign, tmp_exp, tmp_mant) @[Adder.scala 104:25]
+    printf(clock, and(and(UInt<1>("h1"), _T_52), UInt<1>("h1")), "io_c: %b\n", _T_50) @[Adder.scala 135:23]

@@ -15,6 +15,8 @@ class FPU extends Module{
   FPUAdder.io.a := io.a
   FPUAdder.io.b := io.b
   var AdderResult = FPUAdder.io.c
+  var AdderOverflow = FPUAdder.io.of
+  var AdderUnderflow = FPUAdder.io.uf
 
   var FPUMultiplierDivisionUnit = Module(new Multiplier())
   FPUMultiplierDivisionUnit.io.a := io.a
