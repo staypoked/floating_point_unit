@@ -99,36 +99,54 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.of, false.B)
 	expect(dut.io.uf, false.B)
 
-*/
 
-	// run basic Adder tests (simple sub with exponent alignment) ---------------------------- everything works fine until here (to be continued)
 
-	val a_val_7 = "b10000000100000000000000000000110".U
-	val b_val_7 = "b00000000100000000000000000000010".U
+	// run basic Adder tests (simple sub with exponent alignment)
 
-	poke(dut.io.a, a_val_7) //We apply a value to the input
-	poke(dut.io.b, b_val_7) //We apply a value to the input
+	val a_val_9 = "b00000000100000000000000000000110".U
+	val b_val_9 = "b10000001000000000000000000000010".U
+
+	poke(dut.io.a, a_val_9) //We apply a value to the input
+	poke(dut.io.b, b_val_9) //We apply a value to the input
 
 	step(3)
 
-	expect(dut.io.c, "b10000000111111111111111111111100".U)
+	expect(dut.io.c, "b00000001000000000000000000000001".U)
 	expect(dut.io.of, false.B)
 	expect(dut.io.uf, false.B)
 
-	// run basic Adder tests (simple sub with underflow)
 
-	val a_val_10 = "b00000000100000000000000000000000".U
-	val b_val_10 = "b10000000100000000000000000000010".U
+
+	// run basic Adder tests (simple sub with exponent alignment bigger numbs)
+
+	val a_val_10 = "b10000000100000000000000100000000".U
+	val b_val_10 = "b01000000000000000000000000000010".U
 
 	poke(dut.io.a, a_val_10) //We apply a value to the input
 	poke(dut.io.b, b_val_10) //We apply a value to the input
 
+	step(8)
+
+	expect(dut.io.c, "b01000000000000000000000000000010".U)
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, false.B)
+
+*/
+	// run basic Adder tests (simple sub with underflow)
+
+	val a_val_11 = "b11111111011111111111111111111111".U
+	val b_val_11 = "b11111111000000000000000000000001".U
+
+	poke(dut.io.a, a_val_11) //We apply a value to the input
+	poke(dut.io.b, b_val_11) //We apply a value to the input
+
 	step(3)
 
 	expect(dut.io.c, "b00000000000000000000000000000000".U)
-	expect(dut.io.of, true.B)
-	expect(dut.io.uf, false.B)
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, true.B)
 
+	// ---------------------------- everything works fine until here (to be continued)
 
 	/*
 	* NUMB GENERATOR

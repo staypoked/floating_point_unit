@@ -10,18 +10,18 @@ class Multiplier extends Module{
     val c = Output(UInt(32.W))
   })
 
-  val a_sign = RegNext(io.a(31)); // 1 for neg
-  val a_exp = RegNext(io.a(30,23));
-  val a_mant = RegNext(io.a(22,0));
+  val a_sign = RegNext(io.a(31), 0.U)
+  val a_exp = RegNext(io.a(30,23), 0.U)
+  val a_mant = RegNext(io.a(22,0), 0.U)
 
-  val b_sign = RegNext(io.b(31));
-  val b_exp = RegNext(io.b(30,23));
-  val b_mant = RegNext(io.b(22,0));
+  val b_sign = RegNext(io.b(31), 0.U)
+  val b_exp = RegNext(io.b(30,23), 0.U)
+  val b_mant = RegNext(io.b(22,0), 0.U)
 
   // output
-  var tmp_sign = RegInit(0.U(1.W));
-  var tmp_exp = RegInit(0.U(8.W));
-  var tmp_mant = RegInit(0.U(23.W));
+  val tmp_sign = RegNext(0.U(1.W))
+  val tmp_exp = RegNext(0.U(8.W))
+  val tmp_mant = RegNext(0.U(23.W))
 
   tmp_sign := a_sign ^ b_sign
 
