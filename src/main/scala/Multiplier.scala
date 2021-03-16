@@ -19,9 +19,9 @@ class Multiplier extends Module{
   val b_mant = RegNext(io.b(22,0), 0.U)
 
   // output
-  val tmp_sign = RegNext(0.U(1.W))
-  val tmp_exp = RegNext(0.U(8.W))
-  val tmp_mant = RegNext(0.U(23.W))
+  val tmp_sign = RegInit(0.U(1.W))
+  val tmp_exp = RegInit(0.U(8.W))
+  val tmp_mant = RegInit(0.U(23.W))
 
   tmp_sign := a_sign ^ b_sign
 
