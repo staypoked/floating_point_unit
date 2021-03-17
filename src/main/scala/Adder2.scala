@@ -114,7 +114,7 @@ class Stage2 extends Module {
     temp_b_mant := (s2_b_mant >> shift_value).asUInt() // exponent increase for b
 
   }.otherwise{
-    temp_a_mant := (s2_b_mant >> shift_value).asUInt() // exponent increase for b
+    temp_a_mant := (s2_a_mant >> shift_value).asUInt() // exponent increase for a
     temp_b_mant := s2_b_mant
   }
 
@@ -161,11 +161,12 @@ class Stage3 extends Module {
   val temp_sum_mant = WireDefault(0.U(24.W))
   val temp_c_mant = WireDefault(0.U(23.W))
   val temp_c_sign = WireDefault(0.U(1.W))
+  val temp_c_exp = WireDefault(0.U(8.W))
   val check_overflow = WireDefault(0.U(1.W))
   val check_underflow = WireDefault(0.U(1.W))
 
 
-
+  /// 2er complement capture !!!!!!!!!!!!!!!!!!1
   _root_.Chisel.printf("temp_sum_mant: %b\n", temp_sum_mant)
   // add or sub
   when(s3_add){
@@ -185,27 +186,26 @@ class Stage3 extends Module {
 
   // check the overflow
   when (temp_sum_mant(23)){
-    _root_.Chisel.printf("scheuchis bit is set in overflow\n")
-    // please check overflow
     when (s3_a_exp === 254.U){
       check_overflow := 1.U
+      temp_c_mant := 0.U
+      temp_c_sign := 0.U
+      temp_c_exp := 0.U
     }.otherwise {
-      s3_a_exp := s3_a_exp + 1.U
-      //_root_.Chisel.printf("temp_sum_mant: %b\n", temp_sum_mant)
-      // temp_c_mant := temp_sum_mant(23,1)
-      //_root_.Chisel.printf("temp_sum_mant: %b\n", temp_sum_mant)
+      temp_c_exp := s3_a_exp + 1.U
+      temp_c_mant := temp_sum_mant(23,1)
     }
   }.otherwise {
     temp_c_mant := temp_sum_mant(22,0)
+    temp_c_exp := s3_a_exp
   }
 
 
-
-  _root_.Chisel.printf("Output Stage3: temp_c_sign: %b, s3_a_exp: %b, temp_c_mant: %b\n", temp_c_sign, s3_a_exp, temp_c_mant)
+  _root_.Chisel.printf("Output Stage3: temp_c_sign: %b, s3_a_exp: %b, temp_c_mant: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
   _root_.Chisel.printf("Output Stage3: temp_sum_mant: %b\n", temp_sum_mant)
-  io.s3_c := Cat(Cat(temp_c_sign, s3_a_exp), temp_c_mant);
-  io.s3_of := false.B
-  io.s3_uf := false.B
+  io.s3_c := Cat(Cat(temp_c_sign, temp_c_exp), temp_c_mant);
+  io.s3_of := check_overflow
+  io.s3_uf := check_underflow
 }
 
 /*
@@ -216,7 +216,7 @@ class Adder2 extends Module {
     // Input
     val a = Input(UInt(32.W))
     val b = Input(UInt(32.W))
-    val opcode = Input(UInt(2.W))
+    val sel = Input(UInt(1.W))
 
     // Output
     val c = Output(UInt(32.W))
@@ -228,7 +228,7 @@ class Adder2 extends Module {
 
   stage1.io.s1_a := io.a
   stage1.io.s1_b := io.b
-  stage1.io.s1_add_in := io.opcode(0)
+  stage1.io.s1_add_in := io.sel
 
   val stage2 = Module(new Stage2())
 

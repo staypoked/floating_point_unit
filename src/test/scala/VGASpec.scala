@@ -10,10 +10,10 @@ class VGASpec extends FlatSpec with Matchers {
 
   "VGA" should "pass" in {
     Driver.execute(Array("--generate-vcd-output", "on"), () =>
-      new VGA ())  { c =>
+      new Adder2 ())  { c =>
       new PeekPokeTester(c) {
 
-          step(1000000)
+          step(10)
 
 
         println("\nEnd the blinking LED")
