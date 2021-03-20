@@ -11,7 +11,7 @@ class FPU extends Module{
 
 
   // instantiate Adder and Multiplier
-  var FPUAdder = Module(new Adder2())
+  var FPUAdder = Module(new Adder())
   FPUAdder.io.a := io.a
   FPUAdder.io.b := io.b
   FPUAdder.io.sel := io.sel(0)
