@@ -5,6 +5,7 @@
 # sbt bsp settings
 .sbt/*
 .bsp/*
+.bsp
 
 # project and traget folder
 project/*
