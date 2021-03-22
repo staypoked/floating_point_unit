@@ -3,6 +3,8 @@ import chisel3.iotesters._
 import org.scalatest._
 import chisel3.iotesters.Driver
 
+// http://weitz.de/ieee/
+
 class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
 
   val a_val = "b00000000100000000000000000000001".U
