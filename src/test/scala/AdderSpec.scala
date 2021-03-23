@@ -17,10 +17,9 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	poke(dut.io.a, a_val) //We apply a value to the input
 	poke(dut.io.b, b_val) //We apply a value to the input
 
-	step(8)
-	//                 01000000001000000000000000000000
+	step(6)
 	expect(dut.io.c, "b01000000000000000000000000000000".U)
-/*
+
 	/*
 	 * run basic Adder tests (simple add with exponent alignment)
 	 */
@@ -46,7 +45,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 
 	expect(dut.io.c, "b01000100000001000111100110011010".U) // 529.9
 
-*/
+
 /*
 	// run basic Adder tests (simple add with overflow)
 

@@ -1,8 +1,8 @@
 import Chisel.{fromIntToWidth, fromtIntToLiteral}
-import chisel3.util.{PriorityEncoder, Reverse}
+import chisel3.util.{Cat, PriorityEncoder, Reverse}
 import chisel3.{Bool, Bundle, Input, Module, Output, Reg, RegNext, UInt, WireDefault, fromBooleanToLiteral, when}
 
-class RoundAdd extends Module{
+class Round extends Module{
   val io = IO(new Bundle {
     // Inputs
     val sign_in = Input(UInt(1.W))
@@ -19,7 +19,7 @@ class RoundAdd extends Module{
 
     val of_out = Output(Bool())
     val uf_out = Output(Bool())
-    val rounded_out = Output(Bool())
+    //val rounded_out = Output(Bool())
   })
 
   // Latch inputs
@@ -36,7 +36,7 @@ class RoundAdd extends Module{
   val temp_mant = WireDefault(0.U(24.W))
   val temp_sum_mant = WireDefault(0.U(24.W))
 
-  val roudned = WireDefault(Bool(), false.B)
+  //val rounded = WireDefault(Bool(), false.B)
 
   // check overflow if do nothing
   when(of || uf){
@@ -45,25 +45,93 @@ class RoundAdd extends Module{
     temp_mant := mant
   }.otherwise {
     // if LSB = 1 -> Round to nearest, ties to even
-    when(mant(0)){
+    temp_mant := mant + mant(0)
+    temp_sign := sign
+    temp_exp := exp
+
+    /*when(mant(0)){
       temp_mant := mant + 1.U
       temp_sign := sign
       temp_exp := exp
-      roudned := true.B
+      rounded := true.B
 
     // if LSB = 0 do nothing
     }.otherwise{
       temp_sign := sign
       temp_exp := exp
       temp_mant := mant
-    }
+      rounded := false.B
+    }*/
   }
-
+  _root_.Chisel.printf("Output Round: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[24]: %b\n\n", temp_sign, temp_exp, temp_mant)
+  // Write Outputs
   io.sign_out := temp_sign
   io.exp_out := temp_exp
   io.mant_out := temp_mant
   io.of_out := of
   io.uf_out := uf
-  io.rounded_out := roudned
-
 }
+/*
+class RoundMul extends Module{
+  val io = IO(new Bundle{
+    // Inputs
+    val sign_in = Input(UInt(1.W))
+    val exp_in = Input(UInt(8.W))
+    val mant_in = Input(UInt(23.W)) // Not normalized Mantissa 1.XXX
+
+    val exeption_in = Input(Bool())
+    val norm_in = Input(Bool())
+
+    val round_in = Input(UInt(1.W))
+    val sticki_in = Input(UInt(1.W))
+
+    // Outputs
+    val sign_out = Output(UInt(1.W))
+    val exp_out = Output(UInt(8.W))
+    val mant_out = Output(UInt(23.W))
+    //val round_out = Output(UInt(1.W))
+    //val sticki_out = Output(UInt(1.W))
+    val exeption_out = Output(Bool())
+    val rounded_out = Output(Bool())
+  })
+
+  // Latch inputs
+  val sign = RegNext(io.sign_in, 0.U)
+  val exp = RegNext(io.exp_in, 0.U)
+  val mant = RegNext(Cat(Cat(io.mant_in,io.round_in),io.sticki_in), 0.U) // Append round and sticki bit
+
+  val exception = RegNext(io.exeption_in, false.B)
+
+  // Initialize temporal values
+  val temp_sign = WireDefault(0.U(1.W))
+  val temp_exp = WireDefault(0.U(8.W))
+  val temp_mant = WireDefault(0.U(23.W)) // normalized Mantissa .XXX
+  var shift_value = Reg(UInt(5.W))
+
+  val temp_round = WireDefault(0.U(1.W))
+  val temp_sticki = WireDefault(0.U(1.W))
+
+  val rounded = WireDefault(Bool(), false.B)
+
+  when(!exception){
+
+    rounded := true.B
+  }.otherwise{
+    temp_sign := sign
+    temp_exp := exp
+    temp_mant := mant
+    temp_round := temp_mant
+    temp_sticki := temp_mant
+    rounded := false.B
+  }
+
+  // Write Outputs
+  io.sign_out := temp_sign
+  io.exp_out := temp_exp
+  io.mant_out := temp_mant
+  io.exeption_out := exception
+  io.rounded_out := rounded
+  //io.round_out := temp_round
+  //io.sticki_out := temp_sticki
+
+}*/
