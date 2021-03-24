@@ -48,16 +48,16 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
    */
 
   val a_val8 = "b01000001001000000000000000000000".U // 10.0
+  //val b_val8 = "b01000000101000000000000000000000".U // 5.0
   val b_val8 = "b01000000000000000000000000000000".U // 2.0
-
 
   poke(dut.io.a, a_val8) //We apply a value to the input
   poke(dut.io.b, b_val8) //We apply a value to the input
   poke(dut.io.sel, false.B)
 
-  step(6)
+  step(12)
+  //expect(dut.io.c, "b01000000000000000000000000000000".U) // 2.0
   expect(dut.io.c, "b01000000101000000000000000000000".U) // 5.0
-
 /*
   val a_val9 = "b01000000100110110011001100110011".U // 4.85
   val b_val9 = "b01000000000001011100001010001111".U // 2.09
@@ -81,13 +81,10 @@ class MultiplierSpec extends FlatSpec with Matchers {
     chisel3.iotesters.Driver(() => new Multiplier()) { c => new MultiplierTester(c)} should be (true)
   }
 }
-//010010000000000000000000000000000000000000000000
-//01000000000000000000000
-/*
-class MultiplierSpec extends FlatSpec with Matchers {
+
+class MultiplierSpecWave extends FlatSpec with Matchers {
 	"Multiplier " should "pass" in {
 		Driver.execute(Array("--generate-vcd-output", "on"), () => new Multiplier()) { c => new MultiplierTester(c)} should be (true)
 	}
-}*/
-
+}
 

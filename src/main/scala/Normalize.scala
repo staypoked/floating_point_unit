@@ -11,6 +11,7 @@ class Normalize extends Module {
 
     val of_in = Input(Bool())
     val uf_in = Input(Bool())
+    val zero_in = Input(Bool())
     //val norm_in = Input(Bool())
 
     // Outputs
@@ -20,6 +21,7 @@ class Normalize extends Module {
     //
     val of_out = Output(Bool())
     val uf_out = Output(Bool())
+    val zero_out = Output(Bool())
   })
 
   // Latch inputs
@@ -29,6 +31,7 @@ class Normalize extends Module {
 
   val of = RegNext(io.of_in, false.B)
   val uf = RegNext(io.uf_in, false.B)
+  val zero = RegNext(io.zero_in, false.B)
 
   //val norm = RegNext(io.uf_in, true.B)
 
@@ -39,22 +42,25 @@ class Normalize extends Module {
   var shift_value = Reg(UInt(5.W))
 
   shift_value := PriorityEncoder(Reverse(io.mant_in))
-
-  when(mant(0)) {
-    when(of || uf) {
+  _root_.Chisel.printf("Output Normalize: mant(23): %b, shift_value: %d\n\n", mant(23), shift_value)
+  when(!mant(23)) {
+    when(of || uf || zero) {
       temp_sign := sign
       temp_exp := exp
       temp_mant := mant(22, 0)
     }.otherwise {
       temp_sign := sign
       temp_exp := exp - shift_value
-      temp_mant := (mant << shift_value) (22, 0)
+      temp_mant := (mant << shift_value)(22, 0)
+      _root_.Chisel.printf("Output Normalize: shifting\n")
     }
   }.otherwise{
     temp_sign := sign
     temp_exp := exp
     temp_mant := mant(22, 0)
+    _root_.Chisel.printf("Output Normalize: not shifting\n")
   }
+
 
   _root_.Chisel.printf("Output Normalize: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[23]: %b\n\n", temp_sign, temp_exp, temp_mant)
   // Write Outputs
@@ -63,6 +69,7 @@ class Normalize extends Module {
   io.mant_out := temp_mant
   io.of_out := of
   io.uf_out := uf
+  io.zero_out := zero
 
 }
 

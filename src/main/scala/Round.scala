@@ -11,6 +11,7 @@ class Round extends Module{
 
     val of_in = Input(Bool())
     val uf_in = Input(Bool())
+    val zero_in = Input(Bool())
 
     // Outputs
     val sign_out = Output(UInt(1.W))
@@ -19,6 +20,7 @@ class Round extends Module{
 
     val of_out = Output(Bool())
     val uf_out = Output(Bool())
+    val zero_out = Output(Bool())
     //val rounded_out = Output(Bool())
   })
 
@@ -29,6 +31,7 @@ class Round extends Module{
 
   val of = RegNext(io.of_in, false.B)
   val uf = RegNext(io.uf_in, false.B)
+  val zero = RegNext(io.zero_in, false.B)
 
   // Initialize temporal values
   val temp_sign = WireDefault(0.U(1.W))
@@ -39,7 +42,7 @@ class Round extends Module{
   //val rounded = WireDefault(Bool(), false.B)
 
   // check overflow if do nothing
-  when(of || uf){
+  when(of || uf || zero){
     temp_sign := sign
     temp_exp := exp
     temp_mant := mant
@@ -67,9 +70,11 @@ class Round extends Module{
   // Write Outputs
   io.sign_out := temp_sign
   io.exp_out := temp_exp
-  io.mant_out := temp_mant
+  // Add implizit bit for normalization
+  io.mant_out := Cat(1.U(1.W), temp_mant(22,0))
   io.of_out := of
   io.uf_out := uf
+  io.zero_out := zero
 }
 /*
 class RoundMul extends Module{

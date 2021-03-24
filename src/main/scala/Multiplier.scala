@@ -1,7 +1,7 @@
-import Chisel.{UIntToOH, fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral, is}
+import Chisel.{fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
 import chisel3.util.Cat
-import chisel3.{Bool, Bundle, Input, Module, Output, RegInit, RegNext, UInt, WireDefault, when}
-
+import chisel3.{Binary, Bool, Bundle, Input, Module, Output, RegNext, UInt, Wire, WireDefault, fromIntToBinaryPoint, when}
+import chisel3.experimental.{FixedPoint => FP}
 class Stage1Mul extends Module{
   val io = IO(new Bundle {
     // Inputs
@@ -32,7 +32,7 @@ class Stage1Mul extends Module{
   val temp_c_exp = WireDefault(0.U(8.W))
 
   // detect sign
-  val temp_c_sign = (s1_a_sign ^ s1_b_sign)
+  val temp_c_sign = s1_a_sign ^ s1_b_sign
 
   // align exponent
   when(s1_sel) {
@@ -66,7 +66,7 @@ class Stage2Mul extends Module {
     val s2_c_mant_out = Output(UInt(24.W))
     //val s2_round_out = Output(UInt(1.W))
     //val s2_sticki_out = Output(UInt(1.W))
-
+    val s2_res_mant_out = Output(UInt(48.W))
     val exception_out = Output(Bool())
   })
 
@@ -84,6 +84,7 @@ class Stage2Mul extends Module {
   val temp_c_exp = WireDefault(0.U(8.W))
   val temp_c_mant = WireDefault(0.U(24.W))
   val temp_res_mant = WireDefault(0.U(48.W))
+  //val fpInType  = Wire(FP(48.W, 1.BP))
   //val temp_round = WireDefault(0.U(1.W))
   //val temp_sticki = WireDefault(0.U(1.W))
    val exception = WireDefault(Bool(), false.B)
@@ -94,8 +95,9 @@ class Stage2Mul extends Module {
   when(s2_sel){
     temp_res_mant := s2_a_mant * s2_b_mant
   }.otherwise{
-    temp_res_mant := s2_a_mant / s2_b_mant
+    //fpInType := (s2_b_mant / s2_a_mant).asFixedPoint(1.BP)//s2_a_mant / s2_b_mant
   }
+  //_root_.Chisel.printf("Output Stage2: after computation temp_res_mant[48]: %b, check result: %b\n", temp_res_mant, (s2_b_mant / s2_a_mant))
 
   // Check overflow
   when(s2_sel) {
@@ -127,7 +129,7 @@ class Stage2Mul extends Module {
     // https://digitalsystemdesign.in/floating-point-division/
     when(temp_res_mant(23)){
       temp_c_sign := s2_c_sign
-      temp_c_exp := s2_c_exp 
+      temp_c_exp := s2_c_exp
       temp_c_mant := temp_res_mant(23, 0)
     }.otherwise{
       // underflow that cant be handle
@@ -141,12 +143,12 @@ class Stage2Mul extends Module {
         // underflow handleable
         temp_c_sign := s2_c_sign
         temp_c_exp := s2_c_exp //- 1.U
-        temp_c_mant := temp_res_mant(23, 0)// Cat(temp_res_mant(22, 0), 0.U(1.W))
+        temp_c_mant := temp_res_mant(23, 0)
       }
     }
   }
 
-  _root_.Chisel.printf("Output Stage2: temp_res_mant[48]: %b\n", temp_res_mant)
+  //_root_.Chisel.printf("Output Stage2: temp_res_mant[48]: %b\n", temp_res_mant)
   _root_.Chisel.printf("Output Stage2: s2_c_sign[1]: %b, s2_c_exp[8]: %b, s2_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
   _root_.Chisel.printf("\n")
 
@@ -154,6 +156,7 @@ class Stage2Mul extends Module {
   io.s2_c_exp_out := temp_c_exp
   io.s2_c_mant_out := temp_c_mant
   io.exception_out := exception
+  io.s2_res_mant_out := temp_res_mant
   //io.s2_round_out := temp_round
  // io.s2_sticki_out := temp_sticki
   //_root_.Chisel.printf("Output Stage2: s2_c_sign: %b, s2_c_exp: %b, c_mant: %b\n", io.s2_c_sign_in, io.s2_c_exp_in, c_mant)
@@ -199,6 +202,7 @@ class Multiplier extends Module{
 
   norm1.io.of_in := stage2.io.exception_out
   norm1.io.uf_in := false.B
+  norm1.io.zero_in := false.B
 
   val round = Module(new Round())
 
@@ -207,6 +211,7 @@ class Multiplier extends Module{
   round.io.mant_in := norm1.io.mant_out
   round.io.of_in := norm1.io.of_out
   round.io.uf_in := false.B
+  round.io.zero_in := norm1.io.zero_out
 
   val norm2 = Module(new Normalize())
 
@@ -215,10 +220,16 @@ class Multiplier extends Module{
   norm2.io.mant_in := round.io.mant_out
   norm2.io.of_in := round.io.of_out
   norm2.io.uf_in := false.B
+  norm2.io.zero_in := round.io.zero_out
 
   // add a regiter to get to 6 clock cycles
   io.c := RegNext(Cat(Cat(norm2.io.sign_out, norm2.io.exp_out), norm2.io.mant_out), 0.U)
   io.exception := RegNext(norm2.io.of_out, false.B)
 
   _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
+}
+
+// generate Verilog
+object Multiplier extends App {
+  (new chisel3.stage.ChiselStage).emitVerilog(new Multiplier())
 }
