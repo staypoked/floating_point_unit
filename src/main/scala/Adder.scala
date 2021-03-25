@@ -260,7 +260,7 @@ class Stage3Add extends Module {
   }
 
   // set exponent 0 if shift_value and temp_sum_mant are 0
-  when(shift_value ===0.U && temp_sum_mant === 0.U && !s3_add ){
+  when(shift_value ===0.U && temp_sum_mant === 0.U && !s3_add && s3_special === 0.U){
     temp_c_sign := 0.U
     temp_c_exp := 0.U
     zero := true.B
