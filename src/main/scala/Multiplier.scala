@@ -1,7 +1,6 @@
 import Chisel.{fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
 import chisel3.util.Cat
-import chisel3.{Binary, Bool, Bundle, Input, Module, Output, RegNext, UInt, Wire, WireDefault, fromIntToBinaryPoint, when}
-import chisel3.experimental.{FixedPoint => FP}
+import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, UInt, WireDefault, when}
 class Stage1Mul extends Module{
   val io = IO(new Bundle {
     // Inputs
@@ -198,7 +197,7 @@ class Stage3Mul extends Module{
   val s3_c_mant = RegNext(io.s3_c_mant_in, 0.U)
 
   val s3_exception = RegNext(io.s3_exception_in, 0.U)
-  val s3_spezial = RegNext(io.s3_special_in, 0.U)
+  val s3_special = RegNext(io.s3_special_in, 0.U)
 
   // temporal value
   val temp_c_sign = WireDefault(0.U(1.W))
@@ -208,13 +207,13 @@ class Stage3Mul extends Module{
 
   // check the special flags
   // Inf
-  when(s3_spezial === 1.U){
+  when(s3_special === 1.U){
     temp_c_exp := 255.U
     temp_c_mant := 0.U
     temp_exception := 0.U
 
     // NaN
-  }.elsewhen(s3_spezial === 3.U){
+  }.elsewhen(s3_special === 3.U){
     temp_c_sign := s3_c_sign
     temp_c_exp := 255.U
     temp_c_mant := 1.U
@@ -260,8 +259,9 @@ class Multiplier extends Module{
   norm1.io.mant_in := stage2.io.s2_c_mant_out
 
   norm1.io.of_in := stage2.io.s2_exception_out
-  norm1.io.uf_in := stage2.io.s2_special_out(0)
-  norm1.io.zero_in := stage2.io.s2_special_out(1)
+  norm1.io.uf_in := false.B
+  norm1.io.zero_in := false.B
+  norm1.io.special_in := stage2.io.s2_special_out
 
   val round = Module(new Round())
 
@@ -269,8 +269,9 @@ class Multiplier extends Module{
   round.io.exp_in := norm1.io.exp_out
   round.io.mant_in := norm1.io.mant_out
   round.io.of_in := norm1.io.of_out
-  round.io.uf_in :=  norm1.io.uf_out
-  round.io.zero_in := norm1.io.zero_out
+  round.io.uf_in := false.B
+  round.io.zero_in := false.B
+  round.io.special_in := norm1.io.special_out
 
   val norm2 = Module(new Normalize())
 
@@ -278,16 +279,16 @@ class Multiplier extends Module{
   norm2.io.exp_in := round.io.exp_out
   norm2.io.mant_in := round.io.mant_out
   norm2.io.of_in := round.io.of_out
-  norm2.io.uf_in :=  round.io.uf_out
-  norm2.io.zero_in := round.io.zero_out
+  norm2.io.uf_in := false.B
+  norm2.io.zero_in := false.B
+  norm2.io.special_in := round.io.special_out
 
   val stage3 = Module(new Stage3Mul())
   stage3.io.s3_c_sign_in := norm2.io.sign_out
   stage3.io.s3_c_exp_in := norm2.io.exp_out
   stage3.io.s3_c_mant_in := norm2.io.mant_out
   stage3.io.s3_exception_in := norm2.io.of_out
-  // TODO maybe swap bit order
-  stage3.io.s3_special_in := Cat(norm2.io.zero_out, norm2.io.uf_out)
+  stage3.io.s3_special_in := norm2.io.special_out
 
   io.c := stage3.io.s3_c_out
   io.exception := stage3.io.s3_exception_out

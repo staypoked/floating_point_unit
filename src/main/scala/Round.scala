@@ -12,6 +12,7 @@ class Round extends Module{
     val of_in = Input(Bool())
     val uf_in = Input(Bool())
     val zero_in = Input(Bool())
+    val special_in = Input(UInt(2.W))
 
     // Outputs
     val sign_out = Output(UInt(1.W))
@@ -22,6 +23,7 @@ class Round extends Module{
     val uf_out = Output(Bool())
     val zero_out = Output(Bool())
     //val rounded_out = Output(Bool())
+    val special_out = Output(UInt(2.W))
   })
 
   // Latch inputs
@@ -32,6 +34,7 @@ class Round extends Module{
   val of = RegNext(io.of_in, false.B)
   val uf = RegNext(io.uf_in, false.B)
   val zero = RegNext(io.zero_in, false.B)
+  val special = RegNext(io.special_in, 0.U)
 
   // Initialize temporal values
   val temp_sign = WireDefault(0.U(1.W))
@@ -46,35 +49,26 @@ class Round extends Module{
     temp_sign := sign
     temp_exp := exp
     temp_mant := mant
-  }.otherwise {
-    // if LSB = 1 -> Round to nearest, ties to even
-    temp_mant := mant + mant(0)
+  }.elsewhen(special =/= 0.U){
     temp_sign := sign
     temp_exp := exp
-
-    /*when(mant(0)){
-      temp_mant := mant + 1.U
-      temp_sign := sign
-      temp_exp := exp
-      rounded := true.B
-
-    // if LSB = 0 do nothing
-    }.otherwise{
-      temp_sign := sign
-      temp_exp := exp
-      temp_mant := mant
-      rounded := false.B
-    }*/
+    temp_mant := mant
+  }.otherwise {
+    // if LSB = 1 -> Round to nearest, ties to even
+    temp_mant := Cat(1.U(1.W),(mant + mant(0)))
+    temp_sign := sign
+    temp_exp := exp
   }
   _root_.Chisel.printf("Output Round: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[24]: %b\n\n", temp_sign, temp_exp, temp_mant)
   // Write Outputs
   io.sign_out := temp_sign
   io.exp_out := temp_exp
   // Add implizit bit for normalization
-  io.mant_out := Cat(1.U(1.W), temp_mant(22,0))
+  io.mant_out := temp_mant
   io.of_out := of
   io.uf_out := uf
   io.zero_out := zero
+  io.special_out := special
 }
 /*
 class RoundMul extends Module{

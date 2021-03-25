@@ -53,7 +53,6 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
 
   poke(dut.io.a, a_val8) //We apply a value to the input
   poke(dut.io.b, b_val8) //We apply a value to the input
-  poke(dut.io.sel, false.B)
 
   step(12)
   //expect(dut.io.c, "b01000000000000000000000000000000".U) // 2.0

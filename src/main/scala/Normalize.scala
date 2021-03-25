@@ -13,6 +13,7 @@ class Normalize extends Module {
     val uf_in = Input(Bool())
     val zero_in = Input(Bool())
     //val norm_in = Input(Bool())
+    val special_in = Input(UInt(2.W))
 
     // Outputs
     val sign_out = Output(UInt(1.W))
@@ -22,6 +23,7 @@ class Normalize extends Module {
     val of_out = Output(Bool())
     val uf_out = Output(Bool())
     val zero_out = Output(Bool())
+    val special_out = Output(UInt(2.W))
   })
 
   // Latch inputs
@@ -32,6 +34,7 @@ class Normalize extends Module {
   val of = RegNext(io.of_in, false.B)
   val uf = RegNext(io.uf_in, false.B)
   val zero = RegNext(io.zero_in, false.B)
+  val special = RegNext(io.special_in, 0.U)
 
   //val norm = RegNext(io.uf_in, true.B)
 
@@ -43,7 +46,11 @@ class Normalize extends Module {
 
   shift_value := PriorityEncoder(Reverse(io.mant_in))
   _root_.Chisel.printf("Output Normalize: mant(23): %b, shift_value: %d\n\n", mant(23), shift_value)
-  when(!mant(23)) {
+  when(special =/= 0.U){
+    temp_sign := sign
+    temp_exp := exp
+    temp_mant := mant(22, 0)
+  }.elsewhen(!mant(23)) {
     when(of || uf || zero) {
       temp_sign := sign
       temp_exp := exp
@@ -70,6 +77,7 @@ class Normalize extends Module {
   io.of_out := of
   io.uf_out := uf
   io.zero_out := zero
+  io.special_out := special
 
 }
 

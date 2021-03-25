@@ -300,6 +300,81 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.zero, false.B)
 
 	/*
+	* run Adder Test with spezial cases
+	*/
+	// Test 20
+	val a_val_20 = "b01111111100000000000000000000000".U // +Inf
+	val b_val_20 = "b11111111100000000000000000000000".U // -Inf
+
+	poke(dut.io.a, a_val_20) //We apply a value to the input
+	poke(dut.io.b, b_val_20) //We apply a value to the input
+
+	step(6)
+
+	expect(dut.io.c, "b01111111100000000000000000000000".U) // +Inf
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, false.B)
+	expect(dut.io.zero, true.B)
+
+	// Test 21
+	poke(dut.io.a, a_val_20) //We apply a value to the input
+	poke(dut.io.b, a_val_20) //We apply a value to the input
+
+	step(6)
+
+	expect(dut.io.c, "b01111111100000000000000000000000".U) // +Inf
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, false.B)
+	expect(dut.io.zero, false.B)
+
+  // Test 22
+	val a_val_22 = "b01111111100000000000000000000001".U // NaN
+	val b_val_22 = "b01000001000011100011110101110001".U //  8.89
+
+	poke(dut.io.a, a_val_22) //We apply a value to the input
+	poke(dut.io.b, b_val_22) //We apply a value to the input
+
+	step(6)
+
+	expect(dut.io.c, "b01111111100000000000000000000001".U) // NaN
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, false.B)
+	expect(dut.io.zero, false.B)
+
+	// Test 23
+	poke(dut.io.a, a_val_22) //We apply a value to the input // NaN
+	poke(dut.io.b, b_val_20) //We apply a value to the input // -Inf
+
+	step(6)
+
+	expect(dut.io.c, "b01111111100000000000000000000001".U) // NaN
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, false.B)
+	expect(dut.io.zero, false.B)
+
+	// Test 24
+	poke(dut.io.a, a_val_20) //We apply a value to the input // Inf
+	poke(dut.io.b, b_val_22) //We apply a value to the input // 8.89
+
+	step(6)
+
+	expect(dut.io.c, "b01111111100000000000000000000000".U) // +Inf
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, false.B)
+	expect(dut.io.zero, false.B)
+
+
+	// Test 24
+	poke(dut.io.a, b_val_20) //We apply a value to the input // -Inf
+	poke(dut.io.b, b_val_22) //We apply a value to the input // 8.89
+
+	step(6)
+
+	expect(dut.io.c, "b11111111100000000000000000000000".U) // -Inf
+	expect(dut.io.of, false.B)
+	expect(dut.io.uf, false.B)
+	expect(dut.io.zero, false.B)
+	/*
 	* run Adder Test expect underflow and -Inf
 	*/
 /*

@@ -23,10 +23,9 @@ class FPU extends Module{
   var FPUMultiplierDivisionUnit = Module(new Multiplier())
   FPUMultiplierDivisionUnit.io.a := io.a
   FPUMultiplierDivisionUnit.io.b := io.b
-  FPUMultiplierDivisionUnit.io.sel := io.sel(0)
   var MultiplierDivisionUnitResult = FPUMultiplierDivisionUnit.io.c
 
-  // instantiate control
+  // instantiate Divider
 
   var tmp_c = RegInit(0.U(32.W))
 
