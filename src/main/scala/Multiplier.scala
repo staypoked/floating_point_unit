@@ -53,9 +53,9 @@ class Stage1Mul extends Module{
     s1_special := 3.U
   }
 
-  //_root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
-  //_root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
-  //_root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
+  _root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
+  _root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
+  _root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
   //_root_.Chisel.printf("\n")
 
   // Write Outputs
@@ -117,9 +117,14 @@ class Stage2Mul extends Module {
       // overflow that cant be handle
       when(s2_c_exp === 254.U) {
         exception := true.B
-        temp_c_sign := 0.U
+        temp_c_sign := s2_c_sign
         temp_c_exp := 255.U
-        temp_c_mant := 1.U
+        temp_c_mant := 0.U
+      }.elsewhen(s2_c_exp === 1.U){
+        exception := true.B
+        temp_c_sign := s2_c_sign
+        temp_c_exp := 255.U
+        temp_c_mant := 0.U
       }.otherwise {
         // overflow handleable
         temp_c_sign := s2_c_sign
@@ -180,7 +185,7 @@ class Stage3Mul extends Module{
     // Inputs
     val s3_c_sign_in = Input(UInt(1.W))
     val s3_c_exp_in = Input(UInt(8.W))
-    val s3_c_mant_in = Input(UInt(24.W))
+    val s3_c_mant_in = Input(UInt(23.W))
     //val s3_round_in = Input(UInt(1.W))
     //val s3_sticki_in = Input(UInt(1.W))
     val s3_special_in = Input(UInt(2.W))
@@ -203,7 +208,7 @@ class Stage3Mul extends Module{
   // temporal value
   val temp_c_sign = WireDefault(0.U(1.W))
   val temp_c_exp = WireDefault(0.U(8.W))
-  val temp_c_mant = WireDefault(0.U(24.W))
+  val temp_c_mant = WireDefault(0.U(23.W))
   val temp_exception = WireDefault(0.U(1.W))
 
   // check the special flags
