@@ -64,6 +64,7 @@ class Stage1Mul extends Module{
   //io.s1_sel_out := s1_sel
   io.s1_c_sign_out := temp_c_sign
   io.s1_c_exp_out := temp_c_exp
+  io.s1_special_out := s1_special
 }
 
 class Stage2Mul extends Module {
@@ -225,6 +226,9 @@ class Stage3Mul extends Module{
     temp_c_mant := s3_c_mant
     temp_exception := s3_exception
   }
+
+  io.s3_c_out := Cat(Cat(temp_c_sign,temp_c_exp),temp_c_mant)
+  io.s3_exception_out := temp_exception
 }
 
 class Multiplier extends Module{
@@ -251,6 +255,7 @@ class Multiplier extends Module{
   stage2.io.s2_special_in := stage1.io.s1_special_out
   stage2.io.s2_c_sign_in := stage1.io.s1_c_sign_out
   stage2.io.s2_c_exp_in := stage1.io.s1_c_exp_out
+  stage2.io.s2_special_in := stage1.io.s1_special_out
 
   val norm1  = Module(new Normalize())
 
