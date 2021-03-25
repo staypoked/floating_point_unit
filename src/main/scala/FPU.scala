@@ -9,8 +9,7 @@ class FPU extends Module{
     val c = Output(UInt(32.W))
   })
 
-
-  // instantiate Adder and Multiplier
+  // instantiate Adder
   var FPUAdder = Module(new Adder())
   FPUAdder.io.a := io.a
   FPUAdder.io.b := io.b
@@ -18,12 +17,16 @@ class FPU extends Module{
   var AdderResult = FPUAdder.io.c
   var AdderOverflow = FPUAdder.io.of
   var AdderUnderflow = FPUAdder.io.uf
+  var AdderZero = FPUAdder.io.zero
 
+  // instantiate Multiplier
   var FPUMultiplierDivisionUnit = Module(new Multiplier())
   FPUMultiplierDivisionUnit.io.a := io.a
   FPUMultiplierDivisionUnit.io.b := io.b
   FPUMultiplierDivisionUnit.io.sel := io.sel(0)
   var MultiplierDivisionUnitResult = FPUMultiplierDivisionUnit.io.c
+
+  // instantiate control
 
   var tmp_c = RegInit(0.U(32.W))
 
@@ -45,8 +48,6 @@ class FPU extends Module{
   io.c := tmp_c
 
 }
-
-
 
 // generate Verilog
 object FPU extends App {
