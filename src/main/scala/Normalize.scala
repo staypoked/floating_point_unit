@@ -71,7 +71,7 @@ class Normalize extends Module {
 
   _root_.Chisel.printf("Output Normalize: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[23]: %b\n\n", temp_sign, temp_exp, temp_mant)
   // Write Outputs
-  io.sign_out := temp_sign
+  io.sign_out := RegNext(io.sign_in, 0.U)
   io.exp_out := temp_exp
   io.mant_out := temp_mant
   io.of_out := of

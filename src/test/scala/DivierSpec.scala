@@ -5,7 +5,13 @@ import chisel3.iotesters.Driver
 
 // http://weitz.de/ieee/
 
-class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
+class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
+  val val_Inf = "b01111111100000000000000000000000".U // Inf
+  val val_mInf = "b11111111100000000000000000000000".U // -Inf
+  val val_NaN = "b01111111100000000000000000000001".U // NaN
+  val val_Null = "b00000000000000000000000000000000".U // Null
+
+
 
   /*
   * Simple Multiplication positive numbers
@@ -70,7 +76,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   poke(dut.io.b, b_val5) //We apply a value to the input
 
   step(6)
-                      
+
   expect(dut.io.c, "b01000010010011001001111010000100".U) // 51.154797
   expect(dut.io.exception, false.B)
 
@@ -172,8 +178,8 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   * Multiplication capturing special cases
   */
   // Test 13
-  val val_Inf = "b01111111100000000000000000000000".U // Inf
-  val val_mInf = "b11111111100000000000000000000000".U // -Inf
+  //val val_Inf = "b01111111100000000000000000000000".U // Inf
+ // val val_mInf = "b11111111100000000000000000000000".U // -Inf
 
   poke(dut.io.a, val_Inf) //We apply a value to the input
   poke(dut.io.b, val_mInf) //We apply a value to the input
@@ -211,7 +217,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   expect(dut.io.exception, false.B)
 
   // Test 17
-  val val_NaN = "b01111111100000000000000000000001".U // NaN
+
   poke(dut.io.a, b_val12) //We apply a value to the input finite
   poke(dut.io.b, val_NaN) //We apply a value to the input
 
@@ -221,7 +227,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   expect(dut.io.exception, false.B)
 
   // Test 18
-  val val_Null = "b00000000000000000000000000000000".U // NaN
+  //val val_Null = "b00000000000000000000000000000000".U // NaN
   poke(dut.io.a, val_Inf) //We apply a value to the input finite
   poke(dut.io.b, val_Null) //We apply a value to the input
 
@@ -236,15 +242,15 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
 
 }
 
-class MultiplierSpec extends FlatSpec with Matchers {
-  "Multiplier " should "pass" in {
-    chisel3.iotesters.Driver(() => new Multiplier()) { c => new MultiplierTester(c)} should be (true)
+class DividerSpec extends FlatSpec with Matchers {
+  "Divider " should "pass" in {
+    chisel3.iotesters.Driver(() => new Divider()) { c => new DividerTester(c)} should be (true)
   }
 }
 
 class MultiplierSpecWave extends FlatSpec with Matchers {
-	"Multiplier " should "pass" in {
-		Driver.execute(Array("--generate-vcd-output", "on"), () => new Multiplier()) { c => new MultiplierTester(c)} should be (true)
-	}
+  "Divider " should "pass" in {
+    Driver.execute(Array("--generate-vcd-output", "on"), () => new Divider()) { c => new DividerTester(c)} should be (true)
+  }
 }
 

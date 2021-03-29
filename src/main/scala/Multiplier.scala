@@ -17,22 +17,33 @@ class Stage1Mul extends Module{
 
   // Latch inputs
   val s1_a_sign = RegNext(io.s1_a_in(31), 0.U)
-  val s1_a_exp = RegNext(io.s1_a_in(30,23), 0.U)
+  val s1_a_exp = RegNext(Cat(0.U(1.W), io.s1_a_in(30,23)), 0.U)
   val s1_a_mant = RegNext(io.s1_a_in(22,0), 0.U)
 
   val s1_b_sign = RegNext(io.s1_b_in(31), 0.U)
-  val s1_b_exp = RegNext(io.s1_b_in(30,23), 0.U)
+  val s1_b_exp = RegNext(Cat(0.U(1.W), io.s1_b_in(30,23)), 0.U)
   val s1_b_mant = RegNext(io.s1_b_in(22,0), 0.U)
 
     // temporal value
-  val temp_c_exp = WireDefault(0.U(8.W))
+  val temp_exp = WireDefault(0.U(9.W)) // 9th bit for overflow detection
   val s1_special = WireDefault(0.U(2.W))
+  val temp_c_exp = WireDefault(0.U(8.W)) // result
 
   // detect sign
   val temp_c_sign = s1_a_sign ^ s1_b_sign
 
   // calculate exponent
-  temp_c_exp := s1_a_exp + s1_b_exp - 127.U
+  temp_exp := (s1_a_exp + s1_b_exp - 127.U)//(8,1)
+
+  // detect overflow of exponent and set special case to inf
+  when(temp_exp(8)){
+    temp_c_exp := 255.U
+    s1_special := 2.U
+  }.otherwise{
+    temp_c_exp := temp_exp(7,0)
+  }
+
+  _root_.Chisel.printf("Output Stage1: temp_exp(8): %b, temp_exp[9]: %b\n",temp_exp(8), temp_exp)
 
   // detect spezial cases
   // Inf * Inf = Inf => 1.U
@@ -56,6 +67,7 @@ class Stage1Mul extends Module{
   _root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
   _root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
   _root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
+  _root_.Chisel.printf("Output Stage1: special case flag[2]: %b; 1 = Inf; 2 = Overflow; 3 = NaN\n", s1_special)
   //_root_.Chisel.printf("\n")
 
   // Write Outputs
@@ -213,11 +225,17 @@ class Stage3Mul extends Module{
 
   // check the special flags
   // Inf
-  when(s3_special === 1.U){
+  when(s3_special === 1.U) {
+    temp_c_sign := s3_c_sign
     temp_c_exp := 255.U
     temp_c_mant := 0.U
     temp_exception := 0.U
-
+  // Overflow due to exponent addition
+  }.elsewhen(s3_special === 2.U){
+    temp_c_sign := s3_c_sign
+    temp_c_exp := 255.U
+    temp_c_mant := 0.U
+    temp_exception := 1.U
     // NaN
   }.elsewhen(s3_special === 3.U){
     temp_c_sign := s3_c_sign
@@ -232,6 +250,7 @@ class Stage3Mul extends Module{
     temp_exception := s3_exception
   }
 
+  _root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
   io.s3_c_out := Cat(Cat(temp_c_sign,temp_c_exp),temp_c_mant)
   io.s3_exception_out := temp_exception
 }
