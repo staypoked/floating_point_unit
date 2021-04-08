@@ -1,5 +1,5 @@
-package patmos
-
+package io
+import patmos.Constants._
 import chisel3._
 import chisel3.util._
 
@@ -81,10 +81,10 @@ class Stage1Add extends Module {
 
 
 
-    _root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
-    _root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
-    _root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
-    _root_.Chisel.printf("Output Stage1: special %d\n", special)
+    //_root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
+    //_root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
+    //_root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
+    //_root_.Chisel.printf("Output Stage1: special %d\n", special)
     // Write Output
     // extend mantissas by implicit leading bit
     io.s1_a_mant_out := Cat(1.U(1.W), s1_a_mant);
@@ -145,8 +145,8 @@ class Stage2Add extends Module {
     temp_b_mant := (s2_a_mant >> shift_value)//.asUInt() // exponent increase for a
   }
 
-  _root_.Chisel.printf("Output Stage2: s2_a_mant[24]: %b\n", temp_a_mant)
-  _root_.Chisel.printf("Output Stage2: s2_b_mant[24]: %b\n", temp_b_mant)
+  //_root_.Chisel.printf("Output Stage2: s2_a_mant[24]: %b\n", temp_a_mant)
+  //_root_.Chisel.printf("Output Stage2: s2_b_mant[24]: %b\n", temp_b_mant)
 
   // Write Outputs
   io.s2_a_mant_out := temp_a_mant
@@ -214,7 +214,7 @@ class Stage3Add extends Module {
   }
 
   //_root_.Chisel.printf("temp_sum_mant: %b\n", temp_sum_mant)
-  _root_.Chisel.printf("Output Stage3: temp_sum_mant(24): %b\n", temp_sum_mant(24))
+  //_root_.Chisel.printf("Output Stage3: temp_sum_mant(24): %b\n", temp_sum_mant(24))
   //check the overflow bit (24)
   when (temp_sum_mant(24)){
     // if addition
@@ -282,8 +282,8 @@ class Stage3Add extends Module {
   }
 
 
-    _root_.Chisel.printf("Output Stage3: temp_sum_mant[25]: %b\n", temp_sum_mant)
-  _root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[24]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
+  //_root_.Chisel.printf("Output Stage3: temp_sum_mant[25]: %b\n", temp_sum_mant)
+  //_root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[24]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
 
   io.s3_c_sign_out := temp_c_sign
   io.s3_c_exp_out :=temp_c_exp
@@ -371,14 +371,14 @@ class Adder extends Module {
 
   //_root_.Chisel.printf("Output Stage4: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", norm1.io.sign_out, norm1.io.exp_out, norm1.io.mant_out)
   //_root_.Chisel.printf("Output Stage5: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", round.io.sign_out, round.io.exp_out, round.io.mant_out)
-  _root_.Chisel.printf("Output Stage6: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", norm2.io.sign_out, norm2.io.exp_out, norm2.io.mant_out)
+  //_root_.Chisel.printf("Output Stage6: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", norm2.io.sign_out, norm2.io.exp_out, norm2.io.mant_out)
 
   io.c := Cat(Cat(norm2.io.sign_out, norm2.io.exp_out), norm2.io.mant_out(22,0))
   io.of := norm2.io.of_out
   io.uf := norm2.io.uf_out
   io.zero := norm2.io.zero_out
 
-  _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
+  //_root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
 
 }
 
