@@ -5,7 +5,7 @@ import chisel3.iotesters.Driver
 
 // http://weitz.de/ieee/
 
-class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
+class DividerTester(dut: Divider) extends PeekPokeTester(dut) {
   val val_Inf = "b01111111100000000000000000000000".U // Inf
   val val_mInf = "b11111111100000000000000000000000".U // -Inf
   val val_NaN = "b01111111100000000000000000000001".U // NaN
@@ -248,7 +248,7 @@ class DividerSpec extends FlatSpec with Matchers {
   }
 }
 
-class MultiplierSpecWave extends FlatSpec with Matchers {
+class DivierSpecWave extends FlatSpec with Matchers {
   "Divider " should "pass" in {
     Driver.execute(Array("--generate-vcd-output", "on"), () => new Divider()) { c => new DividerTester(c)} should be (true)
   }

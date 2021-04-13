@@ -6,6 +6,7 @@ class Stage1Div extends Module{
     // Inputs
     val s1_a_in = Input(UInt(32.W))
     val s1_b_in = Input(UInt(32.W))
+    val en_in = Input(Bool())
 
     // Outputs
     val s1_a_mant_out = Output(UInt(24.W)) // with implicit bit
@@ -13,6 +14,7 @@ class Stage1Div extends Module{
     val s1_special_out = Output(UInt(2.W))
     val s1_c_sign_out = Output(UInt(1.W))
     val s1_c_exp_out = Output(UInt(8.W))
+    val en_out = Output(Bool())
   })
 
   // Latch inputs
@@ -28,6 +30,8 @@ class Stage1Div extends Module{
   val temp_exp = WireDefault(0.U(9.W)) // 9th bit for overflow detection
   val s1_special = WireDefault(0.U(2.W))
   val temp_c_exp = WireDefault(0.U(8.W)) // result
+
+  io.en_out := RegNext(io.en_in)
 
   // detect sign
   val temp_c_sign = s1_a_sign ^ s1_b_sign
@@ -87,6 +91,7 @@ class Stage2Div extends Module {
     val s2_special_in = Input(UInt(2.W))
     val s2_c_sign_in = Input(UInt(1.W))
     val s2_c_exp_in = Input(UInt(8.W))
+    val en_in = Input(Bool())
 
     val s2_c_sign_out = Output(UInt(1.W))
     val s2_c_exp_out = Output(UInt(8.W))
@@ -96,6 +101,7 @@ class Stage2Div extends Module {
     val s2_special_out = Output(UInt(2.W))
     val s2_res_mant_out = Output(UInt(48.W))
     val s2_exception_out = Output(Bool())
+    val en_out = Output(Bool())
   })
 
   // Latch inputs
@@ -116,7 +122,7 @@ class Stage2Div extends Module {
   //val temp_sticki = WireDefault(0.U(1.W))
   val exception = WireDefault(Bool(), false.B)
 
-
+  io.en_out := RegNext(io.en_in)
 
   // Multiply
   temp_res_mant := s2_a_mant * s2_b_mant
@@ -202,10 +208,12 @@ class Stage3Div extends Module{
     //val s3_sticki_in = Input(UInt(1.W))
     val s3_special_in = Input(UInt(2.W))
     val s3_exception_in = Input(Bool())
+    val en_in = Input(Bool())
 
     // Outputs
     val s3_c_out = Output(UInt(32.W))
     val s3_exception_out = Output(Bool())
+    val en_out = Output(Bool())
   })
 
 
@@ -222,6 +230,8 @@ class Stage3Div extends Module{
   val temp_c_exp = WireDefault(0.U(8.W))
   val temp_c_mant = WireDefault(0.U(23.W))
   val temp_exception = WireDefault(0.U(1.W))
+
+  io.en_out := RegNext(io.en_in)
 
   // check the special flags
   // Inf
@@ -261,16 +271,19 @@ class Divider extends Module{
     val a = Input(UInt(32.W))
     val b = Input(UInt(32.W))
     //val sel = Input(UInt(1.W))
+    val en_in = Input(Bool())
 
     // Outputs
     val c = Output(UInt(32.W))
     val exception = Output(Bool())
+    val en_out = Output(Bool())
   })
 
   val stage1 = Module(new Stage1Div())
 
   stage1.io.s1_a_in := io.a
   stage1.io.s1_b_in := io.b
+  stage1.io.en_in := io.en_in
 
   val stage2 = Module(new Stage2Div())
 
@@ -280,6 +293,7 @@ class Divider extends Module{
   stage2.io.s2_c_sign_in := stage1.io.s1_c_sign_out
   stage2.io.s2_c_exp_in := stage1.io.s1_c_exp_out
   stage2.io.s2_special_in := stage1.io.s1_special_out
+  stage2.io.en_in := stage1.io.en_out
 
   val norm1  = Module(new Normalize())
 
@@ -291,6 +305,7 @@ class Divider extends Module{
   norm1.io.uf_in := false.B
   norm1.io.zero_in := false.B
   norm1.io.special_in := stage2.io.s2_special_out
+  norm1.io.en_in := stage2.io.en_out
 
   val round = Module(new Round())
 
@@ -301,6 +316,7 @@ class Divider extends Module{
   round.io.uf_in := false.B
   round.io.zero_in := false.B
   round.io.special_in := norm1.io.special_out
+  round.io.en_in := norm1.io.en_out
 
   val norm2 = Module(new Normalize())
 
@@ -311,6 +327,7 @@ class Divider extends Module{
   norm2.io.uf_in := false.B
   norm2.io.zero_in := false.B
   norm2.io.special_in := round.io.special_out
+  norm2.io.en_in := round.io.en_out
 
   val stage3 = Module(new Stage3Div())
   stage3.io.s3_c_sign_in := norm2.io.sign_out
@@ -318,9 +335,11 @@ class Divider extends Module{
   stage3.io.s3_c_mant_in := norm2.io.mant_out
   stage3.io.s3_exception_in := norm2.io.of_out
   stage3.io.s3_special_in := norm2.io.special_out
+  stage3.io.en_in := norm2.io.en_out
 
   io.c := stage3.io.s3_c_out
   io.exception := stage3.io.s3_exception_out
+  io.en_out := stage3.io.en_out
 
   _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
 }

@@ -13,6 +13,7 @@ class Round extends Module{
     val uf_in = Input(Bool())
     val zero_in = Input(Bool())
     val special_in = Input(UInt(2.W))
+    val en_in = Input(Bool())
 
     // Outputs
     val sign_out = Output(UInt(1.W))
@@ -24,6 +25,7 @@ class Round extends Module{
     val zero_out = Output(Bool())
     //val rounded_out = Output(Bool())
     val special_out = Output(UInt(2.W))
+    val en_out = Output(Bool())
   })
 
   // Latch inputs
@@ -41,6 +43,8 @@ class Round extends Module{
   val temp_exp = WireDefault(0.U(8.W))
   val temp_mant = WireDefault(0.U(24.W))
   val temp_sum_mant = WireDefault(0.U(24.W))
+
+  io.en_out := io.en_in
 
   //val rounded = WireDefault(Bool(), false.B)
 

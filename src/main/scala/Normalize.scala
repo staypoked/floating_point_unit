@@ -14,6 +14,7 @@ class Normalize extends Module {
     val zero_in = Input(Bool())
     //val norm_in = Input(Bool())
     val special_in = Input(UInt(2.W))
+    val en_in = Input(Bool())
 
     // Outputs
     val sign_out = Output(UInt(1.W))
@@ -24,6 +25,7 @@ class Normalize extends Module {
     val uf_out = Output(Bool())
     val zero_out = Output(Bool())
     val special_out = Output(UInt(2.W))
+    val en_out = Output(Bool())
   })
 
   // Latch inputs
@@ -35,6 +37,8 @@ class Normalize extends Module {
   val uf = RegNext(io.uf_in, false.B)
   val zero = RegNext(io.zero_in, false.B)
   val special = RegNext(io.special_in, 0.U)
+
+  io.en_out := io.en_in
 
   //val norm = RegNext(io.uf_in, true.B)
 

@@ -151,6 +151,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
+
   /*
 	* run Adder tests with small numbers
 	*/
@@ -228,6 +229,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
+
 	// Test 15
 	val a_val_15 = "b11001100011000110100111001000111".U // -59586844.0
 	val b_val_15 = "b11000001000011100011110101110001".U //  -8.89
@@ -299,6 +301,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
+
 	/*
 	* run Adder Test with spezial cases
 	*/
@@ -311,10 +314,11 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 
 	step(6)
 
-	expect(dut.io.c, "b01111111100000000000000000000000".U) // +Inf
+	expect(dut.io.c, "b01111111100000000000000000000001".U) // NaN
 	expect(dut.io.of, false.B)
 	expect(dut.io.uf, false.B)
-	expect(dut.io.zero, true.B)
+	expect(dut.io.zero, false.B)
+
 
 	// Test 21
 	poke(dut.io.a, a_val_20) //We apply a value to the input
@@ -340,6 +344,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.of, false.B)
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
+
 
 	// Test 23
 	poke(dut.io.a, a_val_22) //We apply a value to the input // NaN
@@ -373,7 +378,9 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.c, "b11111111100000000000000000000000".U) // -Inf
 	expect(dut.io.of, false.B)
 	expect(dut.io.uf, false.B)
+
 	expect(dut.io.zero, false.B)
+
 	/*
 	* run Adder Test expect underflow and -Inf
 	*/
