@@ -17,14 +17,16 @@ class DividerTester(dut: Divider) extends PeekPokeTester(dut) {
   * Simple Multiplication positive numbers
   */
   // Test 1
-  val a_val = "b01000001001000000000000000000000".U // 10.0
-  val b_val = "b01000000000000000000000000000000".U // 2.0
+  val val_10_0 = "b01000001001000000000000000000000".U // 10.0
+  val val_2_0 = "b01000000000000000000000000000000".U // 2.0
+  val val_5_0 = "b01000000101000000000000000000000".U // 5.0
 
-  poke(dut.io.a, a_val) //We apply a value to the input
-  poke(dut.io.b, b_val) //We apply a value to the input
-  step(6)
+  poke(dut.io.en_in,true.B)
+  poke(dut.io.a, val_10_0) //We apply a value to the input
+  poke(dut.io.b, val_2_0) //We apply a value to the input
+  step(50)
 
-  expect(dut.io.c, "b01000000101000000000000000000000".U) // 5.0
+  expect(dut.io.c, val_5_0) // 5.0
   expect(dut.io.exception, false.B)
 /*
 

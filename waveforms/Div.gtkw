@@ -1,0 +1,39 @@
+[*]
+[*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
+[*] Wed Apr 14 19:16:26 2021
+[*]
+[dumpfile] "/home/daniel/Studium/Master/2.Semester/CA/floating_point_unit/test_run_dir/DivSpecWave1825184789/Div2.vcd"
+[dumpfile_mtime] "Wed Apr 14 19:10:26 2021"
+[dumpfile_size] 2396
+[savefile] "/home/daniel/Studium/Master/2.Semester/CA/floating_point_unit/waveforms/Div.gtkw"
+[timestart] 0
+[size] 1153 810
+[pos] 314 -160
+*-4.993006 81 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] Div2.
+[sst_width] 200
+[signals_width] 156
+[sst_expanded] 1
+[sst_vpaned_height] 224
+@200
+-Inputs
+@28
+Div2.div0.Nom[3:0]
+Div2.div0.Den[3:0]
+Div2.div0.Index[3:0]
+@208
+-Internals
+@28
+Div2.div0.Index[3:0]
+Div2.div0.temp[4:0]
+Div2.div0.Q[3:0]
+Div2.div0.R[3:0]
+@208
+-Outputs
+@28
+Div2.div0.Q[3:0]
+Div2.div0.R[3:0]
+@29
+Div2.div0.io_finish
+[pattern_trace] 1
+[pattern_trace] 0

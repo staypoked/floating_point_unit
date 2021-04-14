@@ -241,10 +241,10 @@ class MultiplierSpec extends FlatSpec with Matchers {
     chisel3.iotesters.Driver(() => new Multiplier()) { c => new MultiplierTester(c)} should be (true)
   }
 }
-
+/*
 class MultiplierSpecWave extends FlatSpec with Matchers {
 	"Multiplier " should "pass" in {
 		Driver.execute(Array("--generate-vcd-output", "on"), () => new Multiplier()) { c => new MultiplierTester(c)} should be (true)
 	}
-}
+}*/
 

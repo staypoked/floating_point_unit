@@ -9,6 +9,7 @@ class Stage1Add extends Module {
     // Inputs
     val s1_a_in = Input(UInt(32.W))
     val s1_b_in = Input(UInt(32.W))
+    val en_in = Input(Bool())
 
     // Outputs
     val s1_a_mant_out = Output(UInt(24.W))
@@ -19,6 +20,7 @@ class Stage1Add extends Module {
     val s1_c_sign_out = Output(UInt(1.W))
     val s1_c_exp_out = Output(UInt(8.W))
     val s1_special_out = Output(UInt(2.W))
+    val en_out = Output(Bool())
   })
 
   // Latch inputs
@@ -37,6 +39,8 @@ class Stage1Add extends Module {
   val special = WireDefault(0.U(2.W))
 
   val temp_a_larger = WireDefault(Bool(), false.B)
+
+  io.en_out := RegNext(io.en_in)
 
   // detect operation
   val s1_add = !(s1_a_sign ^ s1_b_sign)
@@ -73,6 +77,10 @@ class Stage1Add extends Module {
     special := 1.U
   }
   // Check NaN
+  when((s1_a_exp === 255.U && s1_a_mant === 0.U) && (s1_b_exp === 255.U && s1_b_mant === 0.U) && (s1_a_sign =/= s1_b_sign)){
+    special := 3.U
+  }
+
   when(( s1_a_exp === 255.U && s1_a_mant =/= 0.U) || (s1_b_exp === 255.U  && s1_b_mant =/= 0.U)){
     special := 3.U
   }
@@ -111,6 +119,7 @@ class Stage2Add extends Module {
 
     val s2_c_sign_in = Input(UInt(1.W))
     val s2_c_exp_in = Input(UInt(8.W))
+    val en_in = Input(Bool())
 
     // Outputs
     val s2_a_mant_out = Output(UInt(24.W))
@@ -120,6 +129,7 @@ class Stage2Add extends Module {
     val s2_c_exp_out = Output(UInt(8.W))
     val s2_shmt_amout_out = Output(UInt(8.W))
     val s2_special_out = Output(UInt(2.W))
+    val en_out = Output(Bool())
   })
 
   // Latch inputs
@@ -132,6 +142,8 @@ class Stage2Add extends Module {
   // Initialize temporal values
   val temp_a_mant = WireDefault(0.U(24.W))
   val temp_b_mant = WireDefault(0.U(24.W))
+
+  io.en_out := RegNext(io.en_in)
 
   // shift the smaller mantissa and swap positions if necessary
   when(s2_a_larger){
@@ -171,6 +183,7 @@ class Stage3Add extends Module {
     val s3_c_exp_in = Input(UInt(8.W))
     val s3_shmt_amout_in = Input(UInt(8.W))
     val s3_special_in = Input(UInt(2.W))
+    val en_in = Input(Bool())
 
     // Outputs
     val s3_c_sign_out = Output(UInt(1.W))
@@ -180,6 +193,7 @@ class Stage3Add extends Module {
     val s3_uf_out = Output(Bool())
     val s3_zero_out = Output(Bool())
     val s3_special_out = Output(UInt(2.W))
+    val en_out = Output(Bool())
   })
 
   // Latch inputs
@@ -202,6 +216,8 @@ class Stage3Add extends Module {
   val check_overflow = WireDefault(Bool(), false.B)
   val check_underflow = WireDefault(Bool(), false.B)
   val zero = WireDefault(Bool(), false.B)
+
+  io.en_out := RegNext(io.en_in)
 
   //_root_.Chisel.printf("Addition: %b\n", s3_a_mant + s3_b_mant)
   // add or sub
@@ -280,7 +296,7 @@ class Stage3Add extends Module {
   }
 
 
-    _root_.Chisel.printf("Output Stage3: temp_sum_mant[25]: %b\n", temp_sum_mant)
+  _root_.Chisel.printf("Output Stage3: temp_sum_mant[25]: %b\n", temp_sum_mant)
   _root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[24]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
 
   io.s3_c_sign_out := temp_c_sign
@@ -300,18 +316,21 @@ class Adder extends Module {
     // Input
     val a = Input(UInt(32.W))
     val b = Input(UInt(32.W))
+    val en_in = Input(Bool())
 
     // Output
     val c = Output(UInt(32.W))
     val of = Output(UInt(1.W))
     val uf = Output(UInt(1.W))
     val zero = Output(UInt(1.W))
+    val en_out = Output(Bool())
   })
 
   val stage1 = Module(new Stage1Add())
 
   stage1.io.s1_a_in := io.a
   stage1.io.s1_b_in := io.b
+  stage1.io.en_in := io.en_in
 
   val stage2 = Module(new Stage2Add())
 
@@ -323,6 +342,7 @@ class Adder extends Module {
   stage2.io.s2_c_sign_in := stage1.io.s1_c_sign_out
   stage2.io.s2_c_exp_in  := stage1.io.s1_c_exp_out
   stage2.io.s2_special_in := stage1.io.s1_special_out
+  stage2.io.en_in := stage1.io.en_out
 
   val stage3 = Module(new Stage3Add())
 
@@ -333,6 +353,7 @@ class Adder extends Module {
   stage3.io.s3_c_exp_in  := stage2.io.s2_c_exp_out
   stage3.io.s3_shmt_amout_in := stage2.io.s2_shmt_amout_out
   stage3.io.s3_special_in := stage2.io.s2_special_out
+  stage3.io.en_in := stage2.io.en_out
 
   val norm1 = Module(new Normalize())
   norm1.io.sign_in := stage3.io.s3_c_sign_out
@@ -342,6 +363,7 @@ class Adder extends Module {
   norm1.io.uf_in := stage3.io.s3_uf_out
   norm1.io.zero_in := stage3.io.s3_zero_out
   norm1.io.special_in := stage3.io.s3_special_out
+  norm1.io.en_in := stage3.io.en_out
 
 
   val round = Module(new Round())
@@ -353,6 +375,7 @@ class Adder extends Module {
   round.io.uf_in := norm1.io.uf_out
   round.io.zero_in := norm1.io.zero_out
   round.io.special_in := norm1.io.special_out
+  round.io.en_in := norm1.io.en_out
 
   //_root_.Chisel.printf("io_c: %b\n", io.c)
 
@@ -366,6 +389,7 @@ class Adder extends Module {
   norm2.io.zero_in := round.io.zero_out
   norm2.io.special_in := round.io.special_out
   //norm2.io.norm_in := round.io.rounded_out
+  norm2.io.en_in := round.io.en_out
 
   //_root_.Chisel.printf("Output Stage4: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", norm1.io.sign_out, norm1.io.exp_out, norm1.io.mant_out)
   //_root_.Chisel.printf("Output Stage5: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", round.io.sign_out, round.io.exp_out, round.io.mant_out)
@@ -375,6 +399,7 @@ class Adder extends Module {
   io.of := norm2.io.of_out
   io.uf := norm2.io.uf_out
   io.zero := norm2.io.zero_out
+  io.en_out := norm2.io.en_out
 
   _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
 
