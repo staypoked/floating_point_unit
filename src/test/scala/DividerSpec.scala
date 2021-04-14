@@ -5,7 +5,7 @@ import chisel3.iotesters.Driver
 
 // http://weitz.de/ieee/
 
-class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
+class DividerTester(dut: Divider) extends PeekPokeTester(dut) {
   val val_Inf = "b01111111100000000000000000000000".U // Inf
   val val_mInf = "b11111111100000000000000000000000".U // -Inf
   val val_NaN = "b01111111100000000000000000000001".U // NaN
@@ -17,16 +17,16 @@ class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
   * Simple Multiplication positive numbers
   */
   // Test 1
-  val a_val = "b00111111100000000000000000000000".U // 1.0
+  val a_val = "b01000001001000000000000000000000".U // 10.0
   val b_val = "b01000000000000000000000000000000".U // 2.0
 
   poke(dut.io.a, a_val) //We apply a value to the input
   poke(dut.io.b, b_val) //We apply a value to the input
   step(6)
 
-  expect(dut.io.c, "b01000000000000000000000000000000".U) // 2.0
+  expect(dut.io.c, "b01000000101000000000000000000000".U) // 5.0
   expect(dut.io.exception, false.B)
-
+/*
 
   // Test 2
   val a_val2 = "b01000000100100000000000000000000".U // 4.5
@@ -137,7 +137,7 @@ class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
   * Multiplication with big numbers
   */
 
-  // Test 10 edge case expecting -Inf*/
+  // Test 10 edge case expecting -Inf
   val a_val10 = "b01101010101000000011100000111101".U // 9.684685E25
   val b_val10 = "b11010110100111100010011001100101".U // -8.694387E13
 
@@ -162,7 +162,7 @@ class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
   expect(dut.io.c, "b01111111100000000000000000000000".U) // Inf
   expect(dut.io.exception, true.B)
 
-  // Test 12*/
+  // Test 12
   val a_val12 = "b01101100010010100000000000000110".U // 9.768125E26
   val b_val12 = "b01000001000010110001110000110110".U // 8.694387
 
@@ -178,9 +178,6 @@ class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
   * Multiplication capturing special cases
   */
   // Test 13
-  //val val_Inf = "b01111111100000000000000000000000".U // Inf
- // val val_mInf = "b11111111100000000000000000000000".U // -Inf
-
   poke(dut.io.a, val_Inf) //We apply a value to the input
   poke(dut.io.b, val_mInf) //We apply a value to the input
 
@@ -235,7 +232,7 @@ class DividerTester(dut: Multiplier) extends PeekPokeTester(dut) {
 
   expect(dut.io.c, val_NaN) // Inf
   expect(dut.io.exception, false.B)
-
+*/
   // ---------------------------- everything works fine until here (to be continued)
 
   println("*** Finished testing!! ***")
@@ -248,7 +245,7 @@ class DividerSpec extends FlatSpec with Matchers {
   }
 }
 
-class MultiplierSpecWave extends FlatSpec with Matchers {
+class DividerSpecWave extends FlatSpec with Matchers {
   "Divider " should "pass" in {
     Driver.execute(Array("--generate-vcd-output", "on"), () => new Divider()) { c => new DividerTester(c)} should be (true)
   }

@@ -1,4 +1,5 @@
-import Chisel.{fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
+
+import Chisel.{Bits, INPUT, fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
 import chisel3.util.Cat
 import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, UInt, WireDefault, when}
 class Stage1Div extends Module{
@@ -33,17 +34,17 @@ class Stage1Div extends Module{
   val temp_c_sign = s1_a_sign ^ s1_b_sign
 
   // calculate exponent
-  temp_exp := (s1_a_exp + s1_b_exp - 127.U)//(8,1)
+  temp_exp := (s1_a_exp - s1_b_exp + 127.U)//(8,1)
 
   // detect overflow of exponent and set special case to inf
-  when(temp_exp(8)){
+  /*when(temp_exp(8)){
     temp_c_exp := 255.U
     s1_special := 2.U
   }.otherwise{
     temp_c_exp := temp_exp(7,0)
-  }
+  }*/
 
-  _root_.Chisel.printf("Output Stage1: temp_exp(8): %b, temp_exp[9]: %b\n",temp_exp(8), temp_exp)
+  //_root_.Chisel.printf("Output Stage1: temp_exp(8): %b, temp_exp[9]: %b\n",temp_exp(8), temp_exp)
 
   // detect spezial cases
   // Inf * Inf = Inf => 1.U
@@ -67,7 +68,7 @@ class Stage1Div extends Module{
   _root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
   _root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
   _root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
-  _root_.Chisel.printf("Output Stage1: special case flag[2]: %b; 1 = Inf; 2 = Overflow; 3 = NaN\n", s1_special)
+  //_root_.Chisel.printf("Output Stage1: special case flag[2]: %b; 1 = Inf; 2 = Overflow; 3 = NaN\n", s1_special)
   //_root_.Chisel.printf("\n")
 
   // Write Outputs
@@ -82,8 +83,10 @@ class Stage1Div extends Module{
 class Stage2Div extends Module {
   val io = IO(new Bundle {
     // Inputs
-    val s2_a_mant_in = Input(UInt(24.W)) // with implicit bit
-    val s2_b_mant_in = Input(UInt(24.W)) // with implicit bit
+    //val s2_a_mant_in = Input(UInt(24.W)) // with implicit bit
+    //val s2_b_mant_in = Input(UInt(24.W)) // with implicit bit
+    val s2_a_mant_in = Bits(INPUT, width=24)
+    val s2_b_mant_in = Bits(INPUT, width=24)
     val s2_special_in = Input(UInt(2.W))
     val s2_c_sign_in = Input(UInt(1.W))
     val s2_c_exp_in = Input(UInt(8.W))
@@ -99,8 +102,8 @@ class Stage2Div extends Module {
   })
 
   // Latch inputs
-  val s2_a_mant = RegNext(io.s2_a_mant_in, 0.U)
-  val s2_b_mant = RegNext(io.s2_b_mant_in, 0.U)
+  //val s2_a_mant = RegNext(io.s2_a_mant_in, 0.U)
+  //val s2_b_mant = RegNext(io.s2_b_mant_in, 0.U)
 
   //val s2_sel = RegNext(io.s2_sel_in, true.B)
 
@@ -119,13 +122,13 @@ class Stage2Div extends Module {
 
 
   // Multiply
-  temp_res_mant := s2_a_mant * s2_b_mant
-
+  temp_res_mant := io.s2_b_mant_in / io.s2_a_mant_in
   //_root_.Chisel.printf("Output Stage2: after computation temp_res_mant[48]: %b, check result: %b\n", temp_res_mant, (s2_b_mant / s2_a_mant))
 
+  //TODO
   // Check overflow
   //when(s2_sel) {
-  when(temp_res_mant(47)) {
+  /*when(temp_res_mant(47)) {
     // overflow that cant be handle
     when(s2_c_exp === 254.U) {
       exception := true.B
@@ -153,7 +156,7 @@ class Stage2Div extends Module {
     temp_c_mant := temp_res_mant(46, 23)
     //temp_round := temp_res_mant(21)
     // temp_sticki := temp_res_mant(20)
-  }
+  }*/
   /* }.otherwise{
      // https://digitalsystemdesign.in/floating-point-division/
      when(temp_res_mant(23)){
