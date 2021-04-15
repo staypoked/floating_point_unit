@@ -49,7 +49,7 @@ class Normalize extends Module {
   var shift_value = Reg(UInt(5.W))
 
   shift_value := PriorityEncoder(Reverse(io.mant_in))
-  _root_.Chisel.printf("Output Normalize: mant(23): %b, shift_value: %d\n\n", mant(23), shift_value)
+  //_root_.Chisel.printf("Output Normalize: mant(23): %b, shift_value: %d\n\n", mant(23), shift_value)
   when(special =/= 0.U){
     temp_sign := sign
     temp_exp := exp
@@ -63,17 +63,17 @@ class Normalize extends Module {
       temp_sign := sign
       temp_exp := exp - shift_value
       temp_mant := (mant << shift_value)(22, 0)
-      _root_.Chisel.printf("Output Normalize: shifting\n")
+      //_root_.Chisel.printf("Output Normalize: shifting\n")
     }
   }.otherwise{
     temp_sign := sign
     temp_exp := exp
     temp_mant := mant(22, 0)
-    _root_.Chisel.printf("Output Normalize: not shifting\n")
+   // _root_.Chisel.printf("Output Normalize: not shifting\n")
   }
 
 
-  _root_.Chisel.printf("Output Normalize: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[23]: %b\n\n", temp_sign, temp_exp, temp_mant)
+  //_root_.Chisel.printf("Output Normalize: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[23]: %b\n\n", temp_sign, temp_exp, temp_mant)
   // Write Outputs
   io.sign_out := RegNext(io.sign_in, 0.U)
   io.exp_out := temp_exp

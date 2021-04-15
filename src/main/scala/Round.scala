@@ -63,7 +63,7 @@ class Round extends Module{
     temp_sign := sign
     temp_exp := exp
   }
-  _root_.Chisel.printf("Output Round: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[24]: %b\n\n", temp_sign, temp_exp, temp_mant)
+  //_root_.Chisel.printf("Output Round: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[24]: %b\n\n", temp_sign, temp_exp, temp_mant)
   // Write Outputs
   io.sign_out := temp_sign
   io.exp_out := temp_exp

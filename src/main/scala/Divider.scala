@@ -1,5 +1,5 @@
-import Chisel.{Bits, INPUT, fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
-import chisel3.util.Cat
+import Chisel.{Bits, INPUT, PriorityEncoder, fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
+import chisel3.util.{Cat, Reverse}
 import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, SInt, UInt, WireDefault, when}
 class Stage1Div extends Module{
   val io = IO(new Bundle {
@@ -68,9 +68,9 @@ class Stage1Div extends Module{
     s1_special := 3.U
   }
 
-  _root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
-  _root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
-  _root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
+  //_root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
+  //_root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
+  //_root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
   //_root_.Chisel.printf("Output Stage1: special case flag[2]: %b; 1 = Inf; 2 = Overflow; 3 = NaN\n", s1_special)
   //_root_.Chisel.printf("\n")
 
@@ -110,7 +110,7 @@ class Stage2Div extends Module {
   val s2_a_mant = RegNext(io.s2_a_mant_in, 0.U)
   val s2_b_mant = RegNext(io.s2_b_mant_in, 0.U)
 
-  //val s2_sel = RegNext(io.s2_sel_in, true.B)
+  val s2_enable = RegNext(RegNext(io.en_in, false.B))
 
   val s2_c_sign = RegNext(io.s2_c_sign_in, 0.U)
   val s2_c_exp = RegNext(io.s2_c_exp_in, 0.U)
@@ -120,15 +120,30 @@ class Stage2Div extends Module {
   val temp_c_exp = WireDefault(0.U(8.W))
   val temp_c_mant = WireDefault(0.U(24.W))
   val temp_res_mant = WireDefault(0.U(48.W))
+  val TestQ = WireDefault(0.U(24.W))
+  val TestR = WireDefault(0.U(24.W))
   //val temp_round = WireDefault(0.U(1.W))
   //val temp_sticki = WireDefault(0.U(1.W))
   val exception = WireDefault(Bool(), false.B)
 
-  io.en_out := RegNext(io.en_in)
 
-  // Multiply
-  temp_res_mant := (io.s2_b_mant_in / io.s2_a_mant_in).do_asUInt<<5
-  _root_.Chisel.printf("Output Stage2: after computation temp_res_mant[48]: %b, check result: %d\n", temp_res_mant, (1010000.U / 100000.U).do_asUInt )
+
+  val simplieDivider = Module(new SimpleDivider(25))
+
+  simplieDivider.io.N_in := s2_a_mant
+  simplieDivider.io.D_in := s2_b_mant
+  simplieDivider.io.enable := s2_enable
+  simplieDivider.io.set_to_0 := false.B
+
+  // Divide
+  //temp_res_mant := Cat(simplieDivider.io.Q_out,
+  TestQ := simplieDivider.io.Q_out << (23.U - PriorityEncoder(simplieDivider.io.Q_out))
+  TestR := PriorityEncoder(Reverse(TestQ)) >> (Reverse(simplieDivider.io.R_out))// >> PriorityEncoder(Reverse(TestQ))
+
+  _root_.Chisel.printf("Output Stage2: TestQ: %b, TestR: %b, Ergebnis: %b\n", TestQ, TestR, TestQ | TestR)
+  //_root_.Chisel.printf("Output Stage2: after computation temp_res_mant[48]: %b\n", temp_res_mant)
+
+
 
   //TODO
   // Check overflow
@@ -186,9 +201,10 @@ class Stage2Div extends Module {
    }*/
 
   //_root_.Chisel.printf("Output Stage2: temp_res_mant[48]: %b\n", temp_res_mant)
-  _root_.Chisel.printf("Output Stage2: s2_c_sign[1]: %b, s2_c_exp[8]: %b, s2_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
-  _root_.Chisel.printf("\n")
+  //_root_.Chisel.printf("Output Stage2: s2_c_sign[1]: %b, s2_c_exp[8]: %b, s2_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
+  //_root_.Chisel.printf("\n")
 
+  io.en_out := s2_enable
   io.s2_c_sign_out := temp_c_sign
   io.s2_c_exp_out := temp_c_exp
   io.s2_c_mant_out := temp_c_mant
@@ -262,7 +278,7 @@ class Stage3Div extends Module{
     temp_exception := s3_exception
   }
 
-  _root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
+  //_root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
   io.s3_c_out := Cat(Cat(temp_c_sign,temp_c_exp),temp_c_mant)
   io.s3_exception_out := temp_exception
 }
@@ -343,7 +359,7 @@ class Divider extends Module{
   io.exception := stage3.io.s3_exception_out
   io.en_out := stage3.io.en_out
 
-  _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
+  //_root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
 
 
 

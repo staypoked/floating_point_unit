@@ -125,7 +125,7 @@ class Stage2Mul extends Module {
   io.en_out := RegNext(io.en_in)
 
   // Multiply
-    temp_res_mant := s2_a_mant * s2_b_mant
+  temp_res_mant := s2_a_mant * s2_b_mant
 
   //_root_.Chisel.printf("Output Stage2: after computation temp_res_mant[48]: %b, check result: %b\n", temp_res_mant, (s2_b_mant / s2_a_mant))
 

@@ -24,7 +24,7 @@ class DividerTester(dut: Divider) extends PeekPokeTester(dut) {
   poke(dut.io.en_in,true.B)
   poke(dut.io.a, val_10_0) //We apply a value to the input
   poke(dut.io.b, val_2_0) //We apply a value to the input
-  step(50)
+  step(36)
 
   expect(dut.io.c, val_5_0) // 5.0
   expect(dut.io.exception, false.B)
