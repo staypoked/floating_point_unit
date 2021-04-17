@@ -87,9 +87,9 @@ class Stage1Div extends Module{
   when((s1_a_exp === 255.U && s1_a_mant =/= 0.U) || (s1_b_exp === 255.U && s1_b_mant =/= 0.U)) {
     s1_special := 3.U
   }
-  _root_.Chisel.printf("Output Stage1: a_sign[1]: %b, a_exp[8]: %b, a_mant[24]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
-  _root_.Chisel.printf("Output Stage1: b_sign[1]: %b, b_exp[8]: %b, b_mant[24]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
-  _root_.Chisel.printf("Output Stage1: special: %d\n", s1_special)
+  //_root_.Chisel.printf("Output Stage1: a_sign[1]: %b, a_exp[8]: %b, a_mant[24]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
+  //_root_.Chisel.printf("Output Stage1: b_sign[1]: %b, b_exp[8]: %b, b_mant[24]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
+  //_root_.Chisel.printf("Output Stage1: special: %d\n", s1_special)
   /*
    * Write Outputs
    */
@@ -181,7 +181,7 @@ class Stage2Div extends Module {
   io.s2_en_out := s2_enable
   io.s2_exception_out := false.B
 
-  _root_.Chisel.printf("Output Stage2: c_sign[1]: %b, c_exp[8]: %b, c_mant[24]: %b\n", s2_c_sign, s2_c_exp, s2_c_mant)
+  //_root_.Chisel.printf("Output Stage2: c_sign[1]: %b, c_exp[8]: %b, c_mant[24]: %b\n", s2_c_sign, s2_c_exp, s2_c_mant)
 
 }
 
@@ -224,7 +224,7 @@ class Stage3Div extends Module{
   val temp_c_mant = WireDefault(0.U(23.W))
   val temp_exception = WireDefault(0.U(1.W))
 
-  _root_.Chisel.printf("Output Stage3: special: %d\n", s3_special)
+  //_root_.Chisel.printf("Output Stage3: special: %d\n", s3_special)
 
   // check the special flags
   // Inf
