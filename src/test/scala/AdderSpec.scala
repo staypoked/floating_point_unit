@@ -7,6 +7,7 @@ import chisel3.iotesters.Driver
 
 class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 
+	println("---------- Running basic additions ----------")
 	/*
 	 * run basic Adder tests (two equal numbers)
 	 */
@@ -56,7 +57,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
-
+	println("---------- Running additions with big differences ----------")
 	/*
 	 * run basic Adder tests (big difference)
 	 */
@@ -119,6 +120,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
+	println("---------- Running PI and 0 tests ----------")
 	/*
  	* run Adder test PI
 	*/
@@ -135,6 +137,8 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
+
+	println("---------- Running additions expecting Inf ----------")
 	/*
 	* run Adder tests expect overflow add inf
 	*/
@@ -151,7 +155,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
-
+	println("---------- Running additions with small numbers ----------")
   /*
 	* run Adder tests with small numbers
 	*/
@@ -169,6 +173,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
   expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
+	println("---------- Running basic subtraction ----------")
   /*
   * run Adder tests with different signs numbers
   */
@@ -208,8 +213,6 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.of, false.B)
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, true.B)
-
-
 
 	/*
   * run Adder tests with negative numbers
@@ -255,6 +258,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
+	println("---------- Running add/sub with big differences ----------")
 	/*
 	* run Adder tests with big numbers and different signs
 	*/
@@ -301,7 +305,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 	expect(dut.io.uf, false.B)
 	expect(dut.io.zero, false.B)
 
-
+	println("---------- Testing special operations ----------")
 	/*
 	* run Adder Test with spezial cases
 	*/

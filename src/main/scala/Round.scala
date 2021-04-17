@@ -15,7 +15,7 @@ class Round extends Module{
     val of_in = Input(Bool())
     val uf_in = Input(Bool())
     val zero_in = Input(Bool())
-    val special_in = Input(UInt(2.W))
+    val special_in = Input(UInt(3.W))
     val en_in = Input(Bool())
 
     // Outputs
@@ -26,7 +26,7 @@ class Round extends Module{
     val of_out = Output(Bool())
     val uf_out = Output(Bool())
     val zero_out = Output(Bool())
-    val special_out = Output(UInt(2.W))
+    val special_out = Output(UInt(3.W))
     val en_out = Output(Bool())
   })
 

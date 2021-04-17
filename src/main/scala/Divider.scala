@@ -4,7 +4,7 @@ import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, UInt, WireDefault,
 
 /**
  * This module detects the sign as well as special operation.
- * Furhtermore the exponent is calculated
+ * Furthermore the exponent is calculated
  */
 class Stage1Div extends Module{
   val io = IO(new Bundle {
@@ -84,11 +84,12 @@ class Stage1Div extends Module{
     }
   }
   // one of them NaN
-  when((s1_a_exp === 0.U && s1_a_mant =/= 0.U) || (s1_b_exp === 0.U && s1_b_mant =/= 0.U)) {
+  when((s1_a_exp === 255.U && s1_a_mant =/= 0.U) || (s1_b_exp === 255.U && s1_b_mant =/= 0.U)) {
     s1_special := 3.U
   }
-
-
+  _root_.Chisel.printf("Output Stage1: a_sign[1]: %b, a_exp[8]: %b, a_mant[24]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
+  _root_.Chisel.printf("Output Stage1: b_sign[1]: %b, b_exp[8]: %b, b_mant[24]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
+  _root_.Chisel.printf("Output Stage1: special: %d\n", s1_special)
   /*
    * Write Outputs
    */
@@ -150,9 +151,9 @@ class Stage2Div extends Module {
   s2_quotient := s2_a_mant / s2_b_mant
   s2_remainder := s2_a_mant % s2_b_mant;
 
-  //temp_quotient := s2_quotient << PriorityEncoder(Reverse(s2_quotient));
-  //temp_remainder := s2_remainder >> (PriorityEncoder(s2_quotient) )
-  s2_c_mant := s2_quotient + s2_remainder
+  temp_quotient := s2_quotient << PriorityEncoder(Reverse(s2_quotient));
+  temp_remainder := s2_remainder >> (PriorityEncoder(s2_quotient) )
+  s2_c_mant := temp_quotient | temp_remainder
 /*
   val simpleDivider = Module( new SimpleDivider(24))
 
@@ -223,6 +224,8 @@ class Stage3Div extends Module{
   val temp_c_mant = WireDefault(0.U(23.W))
   val temp_exception = WireDefault(0.U(1.W))
 
+  _root_.Chisel.printf("Output Stage3: special: %d\n", s3_special)
+
   // check the special flags
   // Inf
   when(s3_special === 1.U) {
@@ -271,7 +274,7 @@ class Divider extends Module{
     val en_in = Input(Bool())
 
     // Outputs
-    val c = Output(UInt(24.W))
+    val c = Output(UInt(32.W))
     val exception = Output(Bool())
     val en_out = Output(Bool())
   })
