@@ -24,25 +24,26 @@ class DividerTester(dut: Divider) extends PeekPokeTester(dut) {
   poke(dut.io.en_in,true.B)
   poke(dut.io.a, val_10_0) //We apply a value to the input
   poke(dut.io.b, val_2_0) //We apply a value to the input
-  step(36)
+  step(40)
 
-  expect(dut.io.c, val_5_0) // 5.0
+  expect(dut.io.c, "b101000000000000000000000".U) // 5.0
   expect(dut.io.exception, false.B)
-/*
+
 
   // Test 2
-  val a_val2 = "b01000000100100000000000000000000".U // 4.5
-  val b_val2 = "b01000000000000000000000000000000".U // 2.0
+  val a_val2 = "b01000001001011011001010110000001".U // 10.849
+  val b_val2 = "b01000000000001001100110011001101".U // 2.075
 
   poke(dut.io.a, a_val2) //We apply a value to the input
   poke(dut.io.b, b_val2) //We apply a value to the input
 
-  step(6)
-
-  expect(dut.io.c, "b01000001000100000000000000000000".U) // 9.0
+  step(40)
+                  // 101010001100100010110100
+                  // 101010001100100010110100
+  expect(dut.io.c, "b101001110100111101010100".U) // 5.2284336
   expect(dut.io.exception, false.B)
-
-
+/*
+101010001100100010110100
   // Test 3
   val a_val3 = "b01000000100110110011001100110011".U // 4.85
   val b_val3 = "b01000000000001011100001010001111".U // 2.09

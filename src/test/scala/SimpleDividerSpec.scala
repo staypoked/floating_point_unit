@@ -44,16 +44,47 @@ class SimpleDividerTester(dut: SimpleDivider) extends PeekPokeTester(dut) {
   val val_5_0 = 5.U
   val val1 = "b1010".U
   val val2 = "b1000".U
-             //1000000000000
+             //100000000000000000000000
 
-  poke(dut.io.N_in, val1) //We apply a value to the input
-  poke(dut.io.D_in, val2) //We apply a value to the input
+  poke(dut.io.Nom, val1) //We apply a value to the input
+  poke(dut.io.Den, val2) //We apply a value to the input
   poke(dut.io.enable, true.B)
   poke(dut.io.set_to_0, false.B)
   step(27)
 
-  expect(dut.io.Q_out, val_5_0) // 5.0
-  //expect(dut.io.R_out, "b00110011".U)
+  expect(dut.io.Quo, 1.U) // 5.0
+  expect(dut.io.Rem, 2.U)
+  expect(dut.io.Ready, true.B)
+
+  step(2)
+  println("*** Disable ***")
+  poke(dut.io.enable, false.B)
+
+  step(3)
+  println("*** Setting Reset = !Enable ***")
+  expect(dut.io.Quo, 0.U) // 5.0
+  expect(dut.io.Rem, 0.U)
+  expect(dut.io.Ready, false.B)
+
+  println("*** Reset ***")
+  poke(dut.io.set_to_0, true.B)
+  step(3)
+
+  expect(dut.io.Quo, 0.U) // 5.0
+  expect(dut.io.Rem, 0.U)
+  expect(dut.io.Ready, false.B)
+
+  println("*** Enable, but still on Reset ***")
+  poke(dut.io.enable, true.B)
+
+  step(4)
+
+  expect(dut.io.Quo, 0.U) // 5.0
+  expect(dut.io.Rem, 0.U)
+  expect(dut.io.Ready, false.B)
+
+
+
 
   println("*** Finished testing!! ***")
 
@@ -61,12 +92,12 @@ class SimpleDividerTester(dut: SimpleDivider) extends PeekPokeTester(dut) {
 
 class SimpleDividerSpec extends FlatSpec with Matchers {
   "SimpleDivider " should "pass" in {
-    chisel3.iotesters.Driver(() => new SimpleDivider(25)) { c => new SimpleDividerTester(c)} should be (true)
+    chisel3.iotesters.Driver(() => new SimpleDivider(24)) { c => new SimpleDividerTester(c)} should be (true)
   }
 }
 
 class SimpleDividerSpecWave extends FlatSpec with Matchers {
   "SimpleDivider " should "pass" in {
-    Driver.execute(Array("--generate-vcd-output", "on"), () => new SimpleDivider(25)) { c => new SimpleDividerTester(c)} should be (true)
+    Driver.execute(Array("--generate-vcd-output", "on"), () => new SimpleDivider(24)) { c => new SimpleDividerTester(c)} should be (true)
   }
 }
