@@ -2,6 +2,10 @@ import Chisel.{PriorityEncoder, fromBooleanToLiteral, fromIntToWidth, fromtIntTo
 import chisel3.util.{Cat, Reverse}
 import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, UInt, WireDefault, when}
 
+/**
+ * This module detects the sign as well as special operation.
+ * Furhtermore the exponent is calculated
+ */
 class Stage1Div extends Module{
   val io = IO(new Bundle {
     // Inputs
@@ -95,13 +99,11 @@ class Stage1Div extends Module{
   io.s1_c_exp_out := temp_c_exp(7,0)
   io.s1_special_out := s1_special
   io.s1_en_out := s1_enable
-
-  //_root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
-  //_root_.Chisel.printf("Output Stage1: special case flag[2]: %b; 1 = Inf; 2 = Exponent Overflow; 3 = NaN; 4 = 0\n", s1_special)
-
 }
 
-
+/**
+ * This module divides the mantissas
+ */
 class Stage2Div extends Module {
   val io = IO(new Bundle {
     // Inputs
@@ -145,7 +147,6 @@ class Stage2Div extends Module {
   /*
    * calculate quotient and remainder
    */
-
   s2_quotient := s2_a_mant / s2_b_mant
   s2_remainder := s2_a_mant % s2_b_mant;
 
@@ -183,6 +184,9 @@ class Stage2Div extends Module {
 
 }
 
+/**
+ * This module write the output according to the result or the special operation detection.
+ */
 class Stage3Div extends Module{
   val io = IO(new Bundle{
     // Inputs
@@ -251,12 +255,14 @@ class Stage3Div extends Module{
     temp_exception := s3_exception
   }
 
-  _root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
   io.s3_c_out := Cat(Cat(temp_c_sign,temp_c_exp),temp_c_mant)
   io.s3_exception_out := temp_exception
   io.s3_en_out := s3_enable
 }
 
+/**
+ * Divider Module
+ */
 class Divider extends Module{
   val io = IO(new Bundle {
     // Inputs
@@ -330,13 +336,6 @@ class Divider extends Module{
   io.c := stage3.io.s3_c_out
   io.exception := stage3.io.s3_exception_out
   io.en_out := stage3.io.s3_en_out
-
-
-
-  io.c := stage2.io.s2_c_mant_out
-  io.exception := false.B
-  io.en_out := false.B
-
 }
 
 // generate Verilog

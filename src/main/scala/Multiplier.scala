@@ -3,6 +3,10 @@ import chisel3.util.Cat
 import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, UInt, WireDefault, when}
 
 
+/**
+ * This module detects the sign, calculates exponents
+ * and also detects special operations for multiplication
+ */
 class Stage1Mul extends Module{
   val io = IO(new Bundle {
     // Inputs
@@ -31,6 +35,7 @@ class Stage1Mul extends Module{
   val s1_b_mant = RegNext(io.s1_b_in(22,0), 0.U)
 
   val s1_enable = RegNext(io.s1_en_in, false.B)
+
   /*
   * Initialize temporal values
   */
@@ -91,6 +96,9 @@ class Stage1Mul extends Module{
   io.s1_en_out := s1_enable
 }
 
+/**
+ * This module multiplies the mantissas and checks for overflows
+ */
 class Stage2Mul extends Module {
   val io = IO(new Bundle {
     // Inputs
@@ -178,6 +186,9 @@ class Stage2Mul extends Module {
   io.s2_en_out := s2_enable
 }
 
+/**
+ * This module write the output according to the result or the special operation detection.
+ */
 class Stage3Mul extends Module{
   val io = IO(new Bundle{
     // Inputs
@@ -253,12 +264,14 @@ class Stage3Mul extends Module{
   io.s3_en_out := s3_enable
 }
 
+/**
+ * Mulitplier Module
+ */
 class Multiplier extends Module{
   val io = IO(new Bundle {
     // Inputs
     val a = Input(UInt(32.W))
     val b = Input(UInt(32.W))
-    //val sel = Input(UInt(1.W))
     val en_in = Input(Bool())
 
     // Outputs
@@ -293,7 +306,7 @@ class Multiplier extends Module{
   norm1.io.uf_in := false.B
   norm1.io.zero_in := false.B
   norm1.io.special_in := stage2.io.s2_special_out
-  norm1.io.en_in := stage2.io.en_out
+  norm1.io.en_in := stage2.io.s2_en_out
 
   val round = Module(new Round())
 
@@ -328,8 +341,6 @@ class Multiplier extends Module{
   io.c := stage3.io.s3_c_out
   io.exception := stage3.io.s3_exception_out
   io.en_out := stage3.io.s3_en_out
-
-  _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
 }
 
 // generate Verilog
