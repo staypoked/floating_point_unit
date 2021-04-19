@@ -1,3 +1,5 @@
+package io
+
 import Chisel.{fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
 import chisel3.util.Cat
 import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, UInt, WireDefault, when}
@@ -47,7 +49,7 @@ class Stage1Mul extends Module{
     temp_c_exp := temp_exp(7,0)
   }
 
-  _root_.Chisel.printf("Output Stage1: temp_exp(8): %b, temp_exp[9]: %b\n",temp_exp(8), temp_exp)
+  //_root_.Chisel.printf("Output Stage1: temp_exp(8): %b, temp_exp[9]: %b\n",temp_exp(8), temp_exp)
 
   // detect spezial cases
   // Inf * Inf = Inf => 1.U
@@ -68,10 +70,10 @@ class Stage1Mul extends Module{
     s1_special := 3.U
   }
 
-  _root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
-  _root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
-  _root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
-  _root_.Chisel.printf("Output Stage1: special case flag[2]: %b; 1 = Inf; 2 = Overflow; 3 = NaN\n", s1_special)
+  //_root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
+  //_root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
+  //_root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
+  //_root_.Chisel.printf("Output Stage1: special case flag[2]: %b; 1 = Inf; 2 = Overflow; 3 = NaN\n", s1_special)
   //_root_.Chisel.printf("\n")
 
   // Write Outputs
@@ -184,8 +186,8 @@ class Stage2Mul extends Module {
   }*/
 
   //_root_.Chisel.printf("Output Stage2: temp_res_mant[48]: %b\n", temp_res_mant)
-  _root_.Chisel.printf("Output Stage2: s2_c_sign[1]: %b, s2_c_exp[8]: %b, s2_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
-  _root_.Chisel.printf("\n")
+  //_root_.Chisel.printf("Output Stage2: s2_c_sign[1]: %b, s2_c_exp[8]: %b, s2_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
+  //_root_.Chisel.printf("\n")
 
   io.s2_c_sign_out := temp_c_sign
   io.s2_c_exp_out := temp_c_exp
@@ -260,7 +262,7 @@ class Stage3Mul extends Module{
     temp_exception := s3_exception
   }
 
-  _root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
+  //_root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
   io.s3_c_out := Cat(Cat(temp_c_sign,temp_c_exp),temp_c_mant)
   io.s3_exception_out := temp_exception
 }
@@ -341,7 +343,7 @@ class Multiplier extends Module{
   io.exception := stage3.io.s3_exception_out
   io.en_out := stage3.io.en_out
 
-  _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
+  //_root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
 }
 
 // generate Verilog
