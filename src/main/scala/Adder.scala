@@ -1,15 +1,16 @@
 import chisel3._
 import chisel3.util._
 
-/*
-* EXPONENT ALIGNMENT
-* */
+/**
+ * This modules detects the operation and the according sign and also the special operations
+ * Furthermore the exponents are aligned and the shifting value calculated
+ */
 class Stage1Add extends Module {
   val io = IO(new Bundle{
     // Inputs
     val s1_a_in = Input(UInt(32.W))
     val s1_b_in = Input(UInt(32.W))
-    val en_in = Input(Bool())
+    val s1_en_in = Input(Bool())
 
     // Outputs
     val s1_a_mant_out = Output(UInt(24.W))
@@ -20,10 +21,12 @@ class Stage1Add extends Module {
     val s1_c_sign_out = Output(UInt(1.W))
     val s1_c_exp_out = Output(UInt(8.W))
     val s1_special_out = Output(UInt(2.W))
-    val en_out = Output(Bool())
+    val s1_en_out = Output(Bool())
   })
 
-  // Latch inputs
+  /*
+  * Latch Inputs
+  */
   val s1_a_sign = RegNext(io.s1_a_in(31), 0.U)
   val s1_a_exp = RegNext(io.s1_a_in(30,23), 0.U)
   val s1_a_mant = RegNext(io.s1_a_in(22,0), 0.U)
@@ -31,8 +34,11 @@ class Stage1Add extends Module {
   val s1_b_sign = RegNext(io.s1_b_in(31), 0.U)
   val s1_b_exp = RegNext(io.s1_b_in(30,23), 0.U)
   val s1_b_mant = RegNext(io.s1_b_in(22,0), 0.U)
+  val s1_enable = RegNext(io.s1_en_in, false.B)
 
-  // Initialize temporal values
+  /*
+  * Initialize temporal values
+  */
   val temp_c_sign = WireDefault(0.U(1.W))
   val temp_c_exp = WireDefault(0.U(8.W))
   val shift_value = WireDefault(0.U(8.W))
@@ -40,9 +46,10 @@ class Stage1Add extends Module {
 
   val temp_a_larger = WireDefault(Bool(), false.B)
 
-  io.en_out := RegNext(io.en_in)
 
-  // detect operation
+  /*
+  * Detect operation
+  */
   val s1_add = !(s1_a_sign ^ s1_b_sign)
 
     when(s1_a_exp > s1_b_exp) {
@@ -67,7 +74,9 @@ class Stage1Add extends Module {
       temp_a_larger := true.B
     }
 
-  // detect spezial cases
+  /*
+  * Detect special operations
+  */
   // Inf +- Inf = Inf => 1.U
   // Inf +- finite = Inf
   // Inf +- NaN = NaN => 3.U
@@ -86,27 +95,25 @@ class Stage1Add extends Module {
   }
 
 
-
-    _root_.Chisel.printf("Output Stage1: s1_a_sign[1]: %b, s1_a_exp[8]: %b, s1_a_mant[23]: %b\n", s1_a_sign, s1_a_exp, s1_a_mant)
-    _root_.Chisel.printf("Output Stage1: s1_b_sign[1]: %b, s1_b_exp[8]: %b, s1_b_mant[23]: %b\n", s1_b_sign, s1_b_exp, s1_b_mant)
-    _root_.Chisel.printf("Output Stage1: temp_c_sign[1]: %b, temp_c_exp[8]: %b\n", temp_c_sign, temp_c_exp)
-    _root_.Chisel.printf("Output Stage1: special %d\n", special)
-    // Write Output
-    // extend mantissas by implicit leading bit
-    io.s1_a_mant_out := Cat(1.U(1.W), s1_a_mant);
-    io.s1_b_mant_out := Cat(1.U(1.W), s1_b_mant);;
-    io.s1_shmt_amout_out := shift_value
-    io.s1_a_larger_out := temp_a_larger
-    io.s1_add_out := s1_add
-    io.s1_c_sign_out := temp_c_sign
-    io.s1_c_exp_out := temp_c_exp
-    io.s1_special_out := special
+  /*
+  * Write Outputs
+  */
+  // extend mantissas by implicit leading bit
+  io.s1_a_mant_out := Cat(1.U(1.W), s1_a_mant);
+  io.s1_b_mant_out := Cat(1.U(1.W), s1_b_mant);;
+  io.s1_shmt_amout_out := shift_value
+  io.s1_a_larger_out := temp_a_larger
+  io.s1_add_out := s1_add
+  io.s1_c_sign_out := temp_c_sign
+  io.s1_c_exp_out := temp_c_exp
+  io.s1_special_out := special
+  io.s1_en_out := s1_enable
 
   }
 
-/*
-* MANTISSA SHIFTING
-* */
+/**
+ * This module shifts the mantissas according to the shift value of Stage 1
+ */
 class Stage2Add extends Module {
   val io = IO(new Bundle{
     // Inputs
@@ -119,7 +126,7 @@ class Stage2Add extends Module {
 
     val s2_c_sign_in = Input(UInt(1.W))
     val s2_c_exp_in = Input(UInt(8.W))
-    val en_in = Input(Bool())
+    val s2_en_in = Input(Bool())
 
     // Outputs
     val s2_a_mant_out = Output(UInt(24.W))
@@ -129,23 +136,29 @@ class Stage2Add extends Module {
     val s2_c_exp_out = Output(UInt(8.W))
     val s2_shmt_amout_out = Output(UInt(8.W))
     val s2_special_out = Output(UInt(2.W))
-    val en_out = Output(Bool())
+    val s2_en_out = Output(Bool())
   })
 
-  // Latch inputs
+  /*
+  * Initialize temporal values
+  */
   val s2_a_mant = RegNext(io.s2_a_mant_in, 0.U)
   val s2_b_mant = RegNext(io.s2_b_mant_in, 0.U)
 
   val shift_value = RegNext(io.s2_shmt_amout_in, 0.U)
   val s2_a_larger = RegNext(io.s2_a_larger_in, true.B)
 
-  // Initialize temporal values
+  val s2_enable = RegNext(io.s2_en_in, false.B)
+
+  /*
+  * Initialize temporal values
+  */
   val temp_a_mant = WireDefault(0.U(24.W))
   val temp_b_mant = WireDefault(0.U(24.W))
 
-  io.en_out := RegNext(io.en_in)
-
-  // shift the smaller mantissa and swap positions if necessary
+  /*
+  * shift smaller mantissa and shift if necessary
+  */
   when(s2_a_larger){
     temp_a_mant := s2_a_mant
     temp_b_mant := (s2_b_mant >> shift_value)//.asUInt() // exponent increase for b
@@ -155,14 +168,13 @@ class Stage2Add extends Module {
     temp_b_mant := (s2_a_mant >> shift_value)//.asUInt() // exponent increase for a
   }
 
-  _root_.Chisel.printf("Output Stage2: s2_a_mant[24]: %b\n", temp_a_mant)
-  _root_.Chisel.printf("Output Stage2: s2_b_mant[24]: %b\n", temp_b_mant)
-
-  // Write Outputs
+  /*
+   * Write Outputs
+   */
   io.s2_a_mant_out := temp_a_mant
   io.s2_b_mant_out := temp_b_mant
   io.s2_shmt_amout_out := shift_value
-  // values that are not used in this module
+  io.s2_en_out := s2_enable
   io.s2_add_out := RegNext(io.s2_add_in, false.B)
   io.s2_c_sign_out := RegNext(io.s2_c_sign_in, 0.U)
   io.s2_c_exp_out := RegNext(io.s2_c_exp_in, 0.U)
@@ -170,9 +182,9 @@ class Stage2Add extends Module {
 }
 
 
-/*
-* OVERFLOW, UF CHECK
-* */
+/**
+ * This module performs addition/substraction and checks the result for under and overflows
+ */
 class Stage3Add extends Module {
   val io = IO(new Bundle {
     // Inputs
@@ -183,7 +195,7 @@ class Stage3Add extends Module {
     val s3_c_exp_in = Input(UInt(8.W))
     val s3_shmt_amout_in = Input(UInt(8.W))
     val s3_special_in = Input(UInt(2.W))
-    val en_in = Input(Bool())
+    val s3_en_in = Input(Bool())
 
     // Outputs
     val s3_c_sign_out = Output(UInt(1.W))
@@ -193,10 +205,12 @@ class Stage3Add extends Module {
     val s3_uf_out = Output(Bool())
     val s3_zero_out = Output(Bool())
     val s3_special_out = Output(UInt(2.W))
-    val en_out = Output(Bool())
+    val s3_en_out = Output(Bool())
   })
 
-  // Latch inputs
+  /*
+  * Latch Inputs
+  */
   // extend mantissa to detect overflow
   val s3_a_mant = RegNext(Cat(0.U(1.W),io.s3_a_mant_in, 0.U))
   val s3_b_mant = RegNext(Cat(0.U(1.W),io.s3_b_mant_in, 0.U))
@@ -207,8 +221,11 @@ class Stage3Add extends Module {
   val s3_special = RegNext(io.s3_special_in, 0.U)
 
   val shift_value = RegNext(io.s3_shmt_amout_in, 0.U)
+  val s3_enable = RegNext(io.s3_en_in, false.B)
 
-  // Initialize temporal values
+  /*
+  * Initialize temporal values
+  */
   val temp_sum_mant = WireDefault(0.U(25.W))
   val temp_c_mant = WireDefault(0.U(24.W))
   val temp_c_sign = WireDefault(0.U(1.W))
@@ -217,19 +234,18 @@ class Stage3Add extends Module {
   val check_underflow = WireDefault(Bool(), false.B)
   val zero = WireDefault(Bool(), false.B)
 
-  io.en_out := RegNext(io.en_in)
-
-  //_root_.Chisel.printf("Addition: %b\n", s3_a_mant + s3_b_mant)
-  // add or sub
+  /*
+  * add or subb
+  */
   when(s3_add){
     temp_sum_mant := (s3_a_mant + s3_b_mant)(25,1) // no clue why this has to be so, but it catches the carry bit
   }.otherwise {
     temp_sum_mant := (s3_a_mant - s3_b_mant)(25,1)
   }
 
-  //_root_.Chisel.printf("temp_sum_mant: %b\n", temp_sum_mant)
-  _root_.Chisel.printf("Output Stage3: temp_sum_mant(24): %b\n", temp_sum_mant(24))
-  //check the overflow bit (24)
+  /*
+  * Check for over and underflows
+  */
   when (temp_sum_mant(24)){
     // if addition
     when(s3_add) {
@@ -275,14 +291,18 @@ class Stage3Add extends Module {
     temp_c_mant := temp_sum_mant(23,0)
   }
 
-  // set exponent 0 if shift_value and temp_sum_mant are 0
+  /*
+   * detects equal exponents
+   */
   when(shift_value ===0.U && temp_sum_mant === 0.U && !s3_add && s3_special === 0.U){
     temp_c_sign := 0.U
     temp_c_exp := 0.U
     zero := true.B
   }
 
-  // check the special flags
+  /*
+  * Check special operations
+  */
   // Inf
   when(s3_special === 1.U){
     temp_c_exp := 255.U
@@ -296,9 +316,9 @@ class Stage3Add extends Module {
   }
 
 
-  _root_.Chisel.printf("Output Stage3: temp_sum_mant[25]: %b\n", temp_sum_mant)
-  _root_.Chisel.printf("Output Stage3: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[24]: %b\n", temp_c_sign, temp_c_exp, temp_c_mant)
-
+  /*
+  * Write Outputs
+  */
   io.s3_c_sign_out := temp_c_sign
   io.s3_c_exp_out :=temp_c_exp
   io.s3_c_mant_out := temp_c_mant
@@ -306,11 +326,12 @@ class Stage3Add extends Module {
   io.s3_uf_out := check_underflow
   io.s3_zero_out := zero
   io.s3_special_out := s3_special
+  io.s3_en_out := s3_enable
 }
 
-/*
-* ADDER
-* */
+/**
+ * Adder Module
+ */
 class Adder extends Module {
   val io = IO(new Bundle {
     // Input
@@ -330,7 +351,7 @@ class Adder extends Module {
 
   stage1.io.s1_a_in := io.a
   stage1.io.s1_b_in := io.b
-  stage1.io.en_in := io.en_in
+  stage1.io.s1_en_in := io.en_in
 
   val stage2 = Module(new Stage2Add())
 
@@ -342,7 +363,7 @@ class Adder extends Module {
   stage2.io.s2_c_sign_in := stage1.io.s1_c_sign_out
   stage2.io.s2_c_exp_in  := stage1.io.s1_c_exp_out
   stage2.io.s2_special_in := stage1.io.s1_special_out
-  stage2.io.en_in := stage1.io.en_out
+  stage2.io.s2_en_in := stage1.io.s1_en_out
 
   val stage3 = Module(new Stage3Add())
 
@@ -353,7 +374,7 @@ class Adder extends Module {
   stage3.io.s3_c_exp_in  := stage2.io.s2_c_exp_out
   stage3.io.s3_shmt_amout_in := stage2.io.s2_shmt_amout_out
   stage3.io.s3_special_in := stage2.io.s2_special_out
-  stage3.io.en_in := stage2.io.en_out
+  stage3.io.s3_en_in := stage2.io.s2_en_out
 
   val norm1 = Module(new Normalize())
   norm1.io.sign_in := stage3.io.s3_c_sign_out
@@ -363,7 +384,7 @@ class Adder extends Module {
   norm1.io.uf_in := stage3.io.s3_uf_out
   norm1.io.zero_in := stage3.io.s3_zero_out
   norm1.io.special_in := stage3.io.s3_special_out
-  norm1.io.en_in := stage3.io.en_out
+  norm1.io.en_in := stage3.io.s3_en_out
 
 
   val round = Module(new Round())
@@ -377,7 +398,6 @@ class Adder extends Module {
   round.io.special_in := norm1.io.special_out
   round.io.en_in := norm1.io.en_out
 
-  //_root_.Chisel.printf("io_c: %b\n", io.c)
 
   val norm2 = Module(new Normalize())
 
@@ -388,20 +408,13 @@ class Adder extends Module {
   norm2.io.uf_in := round.io.uf_out
   norm2.io.zero_in := round.io.zero_out
   norm2.io.special_in := round.io.special_out
-  //norm2.io.norm_in := round.io.rounded_out
   norm2.io.en_in := round.io.en_out
-
-  //_root_.Chisel.printf("Output Stage4: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", norm1.io.sign_out, norm1.io.exp_out, norm1.io.mant_out)
-  //_root_.Chisel.printf("Output Stage5: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", round.io.sign_out, round.io.exp_out, round.io.mant_out)
-  _root_.Chisel.printf("Output Stage6: temp_c_sign[1]: %b, temp_c_exp[8]: %b, temp_c_mant[23]: %b\n", norm2.io.sign_out, norm2.io.exp_out, norm2.io.mant_out)
 
   io.c := Cat(Cat(norm2.io.sign_out, norm2.io.exp_out), norm2.io.mant_out(22,0))
   io.of := norm2.io.of_out
   io.uf := norm2.io.uf_out
   io.zero := norm2.io.zero_out
   io.en_out := norm2.io.en_out
-
-  _root_.Chisel.printf("\n-----------------------------------------------------------\n\n")
 
 }
 

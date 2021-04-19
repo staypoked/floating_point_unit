@@ -7,6 +7,7 @@ import chisel3.iotesters.Driver
 
 class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
 
+  println("---------- Running basic multiplications ----------")
   /*
   * Simple Multiplication positive numbers
   */
@@ -46,6 +47,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   expect(dut.io.c, "b01000001001000100010111100011010".U) // 10.136499
   expect(dut.io.exception, false.B)
 
+  println("---------- Running multiplications with only negative numbers ----------")
   /*
   * Simple Multiplication negative numbers
   */
@@ -87,6 +89,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   expect(dut.io.c, "b01001100100011011111111000100110".U) // 74445104.0
   expect(dut.io.exception, false.B)
 
+  println("---------- Running different sign multiplications ----------")
   /*
   * Simple Multiplication with different signs
   */
@@ -127,6 +130,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   expect(dut.io.c, "b11100000100100100001000101100000".U) // -8.4202395E19
   expect(dut.io.exception, false.B)
 
+  println("---------- Running multiplications with big numbers ----------")
   /*
   * Multiplication with big numbers
   */
@@ -168,6 +172,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
   expect(dut.io.c, "b01101101110110111000100010001100".U) // 8.4927865E27
   expect(dut.io.exception, false.B)
 
+  println("---------- Running special multiplication tests ----------")
   /*
   * Multiplication capturing special cases
   */
