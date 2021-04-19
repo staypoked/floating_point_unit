@@ -1,5 +1,3 @@
-package io
-
 import Chisel.{fromBooleanToLiteral, fromIntToWidth, fromtIntToLiteral}
 import chisel3.util.Cat
 import chisel3.{Bool, Bundle, Input, Module, Output, RegNext, UInt, WireDefault, when}
