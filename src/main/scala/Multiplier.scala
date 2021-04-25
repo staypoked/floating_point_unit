@@ -62,7 +62,6 @@ class Stage1Mul extends Module{
     temp_c_exp := temp_exp(7,0)
   }
 
-
   /*
    * Detect special operations
    */
@@ -173,7 +172,6 @@ class Stage2Mul extends Module {
       temp_c_exp := s2_c_exp
       temp_c_mant := temp_res_mant(46, 23)
     }
-
   /*
   * Write Outputs
   */
