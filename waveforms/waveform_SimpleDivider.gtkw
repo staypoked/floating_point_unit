@@ -1,0 +1,28 @@
+[*]
+[*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
+[*] Sun Apr 25 07:30:52 2021
+[*]
+[dumpfile] "/home/daniel/Studium/Master/2.Semester/CA/floating_point_unit/test_run_dir/SimpleDividerSpecWave1028308423/SimpleDivider.vcd"
+[dumpfile_mtime] "Sun Apr 25 07:26:30 2021"
+[dumpfile_size] 2545
+[savefile] "/home/daniel/Studium/Master/2.Semester/CA/floating_point_unit/waveforms/waveform_SimpleDivider.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] 631 33
+*-5.546160 111 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 200
+[signals_width] 158
+[sst_expanded] 1
+[sst_vpaned_height] 151
+@201
+-Inputs and Index
+@24
+SimpleDivider.index[3:0]
+SimpleDivider.Nom[3:0]
+SimpleDivider.Den[3:0]
+@22
+SimpleDivider.R[3:0]
+SimpleDivider.Q[3:0]
+SimpleDivider.TempR[3:0]
+[pattern_trace] 1
+[pattern_trace] 0

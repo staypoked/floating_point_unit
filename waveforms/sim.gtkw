@@ -1,0 +1,56 @@
+[*]
+[*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
+[*] Sat Apr 24 14:53:54 2021
+[*]
+[dumpfile] "/home/daniel/Studium/Master/2.Semester/CA/floating_point_unit/test_run_dir/SimpleDividerSpecWave1686204884/SimpleDivider.vcd"
+[dumpfile_mtime] "Sat Apr 24 14:49:32 2021"
+[dumpfile_size] 10903
+[savefile] "/home/daniel/Studium/Master/2.Semester/CA/floating_point_unit/waveforms/sim.gtkw"
+[timestart] 0
+[size] 1920 1016
+[pos] -46 -47
+*-5.523724 261 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 200
+[signals_width] 118
+[sst_expanded] 1
+[sst_vpaned_height] 296
+@24
+SimpleDivider.index[23:0]
+@29
+SimpleDivider.Nom[23:0]
+SimpleDivider.Den[23:0]
+@22
+SimpleDivider.Q[23:0]
+@800024
+SimpleDivider.R[23:0]
+@28
+(0)SimpleDivider.R[23:0]
+(1)SimpleDivider.R[23:0]
+(2)SimpleDivider.R[23:0]
+(3)SimpleDivider.R[23:0]
+(4)SimpleDivider.R[23:0]
+(5)SimpleDivider.R[23:0]
+(6)SimpleDivider.R[23:0]
+(7)SimpleDivider.R[23:0]
+(8)SimpleDivider.R[23:0]
+(9)SimpleDivider.R[23:0]
+(10)SimpleDivider.R[23:0]
+(11)SimpleDivider.R[23:0]
+(12)SimpleDivider.R[23:0]
+(13)SimpleDivider.R[23:0]
+(14)SimpleDivider.R[23:0]
+(15)SimpleDivider.R[23:0]
+(16)SimpleDivider.R[23:0]
+(17)SimpleDivider.R[23:0]
+(18)SimpleDivider.R[23:0]
+(19)SimpleDivider.R[23:0]
+(20)SimpleDivider.R[23:0]
+(21)SimpleDivider.R[23:0]
+(22)SimpleDivider.R[23:0]
+(23)SimpleDivider.R[23:0]
+@1001204
+-group_end
+@24
+SimpleDivider.temp[24:0]
+[pattern_trace] 1
+[pattern_trace] 0
