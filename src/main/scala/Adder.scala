@@ -140,7 +140,7 @@ class Stage2Add extends Module {
   })
 
   /*
-  * Initialize temporal values
+  * Latch Inputs
   */
   val s2_a_mant = RegNext(io.s2_a_mant_in, 0.U)
   val s2_b_mant = RegNext(io.s2_b_mant_in, 0.U)
