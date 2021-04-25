@@ -307,7 +307,7 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 
 	println("---------- Testing special operations ----------")
 	/*
-	* run Adder Test with spezial cases
+	* run Adder Test with special cases
 	*/
 	// Test 20
 	val a_val_20 = "b01111111100000000000000000000000".U // +Inf
@@ -385,28 +385,8 @@ class AdderTester(dut: Adder) extends PeekPokeTester(dut) {
 
 	expect(dut.io.zero, false.B)
 
-	/*
-	* run Adder Test expect underflow and -Inf
-	*/
-/*
-	// Test 20
-	val a_val_20 = "b10000000111111111111111111111111".U // -2.3509886E-38
-	val b_val_20 = "b00000000100011001100110011001101".U // -1.1754945E-38
 
-	poke(dut.io.a, a_val_20) //We apply a value to the input
-	poke(dut.io.b, b_val_20) //We apply a value to the input
-
-	step(6)
-
-	expect(dut.io.c, "b11111111100000000000000000000000".U) // -Inf
-	expect(dut.io.of, false.B)
-	expect(dut.io.uf, true.B)
-	expect(dut.io.zero, false.B)
-*/
-	// ---------------------------- everything works fine until here (to be continued)
-
-
-	println("*** Finished testing!! ***")
+	println("---------- Finished testing Add/Sub! ----------")
 
 }
 

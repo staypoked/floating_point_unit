@@ -66,17 +66,13 @@ class Normalize extends Module {
       temp_sign := sign
       temp_exp := exp - shift_value
       temp_mant := (mant << shift_value)(22, 0)
-      //_root_.Chisel.printf("Output Normalize: shifting\n")
     }
   }.otherwise{
     temp_sign := sign
     temp_exp := exp
     temp_mant := mant(22, 0)
-   // _root_.Chisel.printf("Output Normalize: not shifting\n")
   }
 
-
-  //_root_.Chisel.printf("Output Normalize: temp_sign[1]: %b, temp_exp[8]: %b, temp_mant[23]: %b\n\n", temp_sign, temp_exp, temp_mant)
   /*
    * Write Outputs
    */

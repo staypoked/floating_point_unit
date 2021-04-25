@@ -237,7 +237,7 @@ class MultiplierTester(dut: Multiplier) extends PeekPokeTester(dut) {
 
   // ---------------------------- everything works fine until here (to be continued)
 
-  println("*** Finished testing!! ***")
+  println("*** Finished testing Multiplier! ***")
 
 }
 
