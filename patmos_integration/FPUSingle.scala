@@ -22,7 +22,7 @@ object FPUSingle extends DeviceObject {
 
 class FPUSingle() extends CoreDevice() {
 
-	//	Register Command
+	// Register Command
 	val masterReg = RegNext(io.ocp.M)
 
 	/* 
@@ -140,7 +140,7 @@ class FPUSingle() extends CoreDevice() {
 	}
 	
 	/* 
-	* Instance Adder, Multiplier and Divier
+	* Instance Adder, Multiplier and Divider
 	*/
   	var adder = Module(new Adder())
 	var multiplier = Module(new Multiplier())
