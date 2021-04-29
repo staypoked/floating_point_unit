@@ -1,0 +1,40 @@
+Hello, testing floating point unit starts now!
+----------------------- Test ADD -----------------------
+Hardware implementation!
+Hard-Float Result = 95812.437500 (computed in 1021 clock cycles)
+FPU Flags: |EXC|UND|OVR|ZERO|
+           |  0|  0|  0|   0|
+--------------------------------------------------------
+Soft-Float implementation!
+Soft-Float Result = 95812.437500 (computed in 3685 clock cycles)
+
+
+----------------------- Test SUB -----------------------
+Hardware implementation!
+Hard-Float Result = 95451.562500 (computed in 1021 clock cycles)
+FPU Flags: |EXC|UND|OVR|ZERO|
+           |  0|  0|  0|   0|
+--------------------------------------------------------
+Soft-Float implementation!
+Soft-Float Result = 95451.562500 (computed in 4355 clock cycles)
+
+
+----------------------- Test MUL -----------------------
+Hardware implementation!
+Hard-Float Result = 17255620.000000 (computed in 1021 clock cycles)
+FPU Flags: |EXC|UND|OVR|ZERO|
+           |  0|  0|  0|   0|
+--------------------------------------------------------
+Soft-Float implementation!
+Soft-Float Result = 17255620.000000 (computed in 4879 clock cycles)
+
+
+----------------------- Test DIV -----------------------
+Hardware implementation!
+Hard-Float Result = 530.000977 (computed in 979 clock cycles)
+FPU Flags: |EXC|UND|OVR|ZERO|
+           |  0|  0|  0|   0|
+--------------------------------------------------------
+Soft-Float implementation!
+Soft-Float Result = 530.000000 (computed in 4922 clock cycles)
+

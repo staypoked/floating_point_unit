@@ -26,9 +26,9 @@ class FPUSingle() extends CoreDevice() {
 	val masterReg = RegNext(io.ocp.M)
 
 	/* 
-	The response register (respReg) and the data register (dataReg) 
-	are temparal storages for the connections to the OCPMaster
-	*/
+	 * The response register (respReg) and the data register (dataReg) 
+	 * are temparal storages for the connections to the OCPMaster
+	 */
 	// default response
 	val respReg = RegInit(OcpResp.NULL)
 	respReg := OcpResp.NULL
@@ -37,11 +37,11 @@ class FPUSingle() extends CoreDevice() {
 	val dataReg = RegInit(0.U(32.W))
 
 	/*
-	 These registers are used for the data coming form the master 
-	some of them are used to provide data for the master
-	*/
+	 * These registers are used for the data coming form the master 
+         * some of them are used to provide data for the master
+	 */
 	// incoming data
-	val enableReg = RegInit(0.U(1.W))
+	val enableRegIn = RegInit(0.U(1.W))
 	/*
 		0x01 = add
 		0x02 = sub
@@ -61,6 +61,7 @@ class FPUSingle() extends CoreDevice() {
 		0x80 = Exception (8)
 	*/
 	val statusReg = RegInit(0.U(8.W))
+	val enableRegOut = RegInit(0.U(1.W))
 
 	// process write commands
 	when(masterReg.Cmd === OcpCmd.WR){
@@ -74,7 +75,7 @@ class FPUSingle() extends CoreDevice() {
 		 	// address of register enable
 			is(0x00.U){
 				// enable Calculation
-				enableReg := masterReg.Data(0)
+				enableRegIn := masterReg.Data(0)
 			}
 			// address of register operation
 			is(0x04.U){
@@ -107,9 +108,9 @@ class FPUSingle() extends CoreDevice() {
 		 */
 		 switch(masterReg.Addr(5, 0)){
 		 	// address of register enable
-			is(0x00.U){
+			is(0x18.U){
 				// copy the contant of enableReg in the data register
-				dataReg := Cat(0.U(31.W), enableReg)
+				dataReg := Cat(0.U(31.W), enableRegOut)
 			}
 			// address of register operation
 			is(0x04.U){
@@ -140,8 +141,8 @@ class FPUSingle() extends CoreDevice() {
 	}
 	
 	/* 
-	* Instance Adder, Multiplier and Divider
-	*/
+	 * Instance Adder, Multiplier and Divider
+	 */
   	var adder = Module(new Adder())
 	var multiplier = Module(new Multiplier())
 	var divider = Module(new Divider())
@@ -153,50 +154,58 @@ class FPUSingle() extends CoreDevice() {
 			// Input
 			adder.io.a := operandA
 			adder.io.b := operandB
-			adder.io.en_in := enableReg
+			adder.io.en_in := enableRegIn
 
 			// Ouput
 			resultReg := adder.io.c
 			statusReg := Cat(0.U(1.W), adder.io.of, adder.io.uf, adder.io.zero, 0.U(4.W))
-			enableReg := !(adder.io.en_out & enableReg)
+			enableRegOut := !(adder.io.en_out & enableRegIn)
 		}
 		// sub
 		is(2.U){
 			// Inputs
 			adder.io.a := operandA
 			adder.io.b := Cat(1.U(1.W), operandB(30, 0))
-			adder.io.en_in := enableReg
+			adder.io.en_in := enableRegIn
 			
 			// Outputs
 			resultReg := adder.io.c
 			statusReg := Cat(0.U(1.W), adder.io.of, adder.io.uf, adder.io.zero, 0.U(4.W))
-			enableReg := !(adder.io.en_out & enableReg)
+			enableRegOut := !(adder.io.en_out & enableRegIn)
 		}
 		// mul
 		is(4.U){
 			// Inputs
 			multiplier.io.a := operandA
 			multiplier.io.b := operandB
-			multiplier.io.en_in := enableReg
+			multiplier.io.en_in := enableRegIn
 			
 			// Outputs
 			resultReg := multiplier.io.c
 			statusReg := Cat(multiplier.io.exception, 0.U(7.W))
-			enableReg := !(multiplier.io.en_out & enableReg)
+			enableRegOut := !(multiplier.io.en_out & enableRegIn)
 		}
 		// div
 		is(8.U){
 			// Inputs
 			divider.io.a := operandA
 			divider.io.b := operandB
-			divider.io.en_in := enableReg
+			divider.io.en_in := enableRegIn
 			
 			// Outputs
 			resultReg := divider.io.c
 			statusReg := Cat(divider.io.exception, 0.U(7.W))
-			enableReg := !(divider.io.en_out & enableReg)
+			enableRegOut := !(divider.io.en_out & enableRegIn)
 		}
 	}
+	
+	/* 
+	 * Reset the result register
+	 */
+	 when(!enableRegIn){
+	 	resultReg := 0.U
+ 	}
+	
 
  
   // Connections to the master
