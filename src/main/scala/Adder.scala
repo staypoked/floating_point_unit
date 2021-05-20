@@ -161,11 +161,11 @@ class Stage2Add extends Module {
   */
   when(s2_a_larger){
     temp_a_mant := s2_a_mant
-    temp_b_mant := (s2_b_mant >> shift_value)//.asUInt() // exponent increase for b
+    temp_b_mant := (s2_b_mant >> shift_value) // exponent increase for b
 
   }.otherwise{
     temp_a_mant := s2_b_mant
-    temp_b_mant := (s2_a_mant >> shift_value)//.asUInt() // exponent increase for a
+    temp_b_mant := (s2_a_mant >> shift_value) // exponent increase for a
   }
 
   /*
@@ -238,7 +238,7 @@ class Stage3Add extends Module {
   * add or subb
   */
   when(s3_add){
-    temp_sum_mant := (s3_a_mant + s3_b_mant)(25,1) // no clue why this has to be so, but it catches the carry bit
+    temp_sum_mant := (s3_a_mant + s3_b_mant)(25,1)        // no clue why this has to be so, but it catches the carry bit
   }.otherwise {
     temp_sum_mant := (s3_a_mant - s3_b_mant)(25,1)
   }
